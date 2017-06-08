@@ -2,7 +2,7 @@
 
 # %%
 import numpy as np
-
+import matplotlib.pyplot as plt 
 # %% 
 # Accessing Documentation with ?
 # Accessing source code with ??
@@ -54,3 +54,22 @@ y = np.arange(16).reshape(4,4)
 x1, x2, x3 = np.split(x, [3,5])
 upper, lower = np.vsplit(y, [2])
 left, right = np.hsplit(y, [2])
+
+# advanced ufunc feathers
+
+x = np.arange(5)
+y = np.empty(5)
+np.multiply(x, 2, out=y) # out参数直接将结果输出到y
+
+# Aggregates
+# reduce 将array reduce为一个值
+# accumulate 可以保存reduce过程中的每个中间结果
+x = np.arange(10)
+np.add.reduce(x)
+np.multiply.reduce(x)
+np.add.accumulate(x)
+
+x = np.linspace(0, 5, 50)
+y = np.linspace(0, 5, 50)[:, np.newaxis]
+z = np.sin(x)**10 + np.cos(10+y*x)*np.cos(x)
+plt.imshow(z)
