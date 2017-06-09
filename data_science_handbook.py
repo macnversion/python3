@@ -2,6 +2,8 @@
 
 # %%
 import numpy as np
+import pandas as pd
+from pandas import DataFrame, Series
 import matplotlib.pyplot as plt 
 # %% 
 # Accessing Documentation with ?
@@ -75,3 +77,8 @@ z = np.sin(x)**10 + np.cos(10+y*x)*np.cos(x)
 plt.imshow(z)
 
 # %% pandas
+area = pd.Series({'Alaska': 1723337, 'Texas': 695662,
+                  'California': 423967}, name='area')
+population = pd.Series({'California': 38332521, 'Texas': 26448193,
+                        'New York': 19651127}, name='population')
+data = pd.DataFrame({'area':area, 'population':population})
