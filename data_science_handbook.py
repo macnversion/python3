@@ -2,7 +2,9 @@
 
 # %%
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import pandas as pd
+from pandas import DataFrame, Series
 # %% 
 # Accessing Documentation with ?
 # Accessing source code with ??
@@ -73,5 +75,17 @@ x = np.linspace(0, 5, 50)
 y = np.linspace(0, 5, 50)[:, np.newaxis]
 z = np.sin(x)**10 + np.cos(10+y*x)*np.cos(x)
 plt.imshow(z)
+plt.colorbar()
 
 # %% pandas
+area = pd.Series({'Alaska': 1723337, 'Texas': 695662,
+                  'California': 423967}, name='area')
+population = Series({'California': 38332521, 'Texas': 26448193,
+                        'New York': 19651127}, name='population')
+data = DataFrame({'area':area, 'population':population})
+data['density'] = data['population']/data['area']
+print(data.loc[:'New York', :'population'], '\n')
+print(data.iloc[:3,:2])
+
+A = DataFrame(np.random.randint(0, 10, (2,2)), columns=list('AB'))
+B = DataFrame(np.random.randint(0, 20, (3,3)), columns=list('ABC'))
