@@ -91,5 +91,11 @@ data['density'] = data['population']/data['area']
 print(data.loc[:'New York', :'population'], '\n')
 print(data.iloc[:3,:2])
 
-A = DataFrame(np.random.randint(0, 10, (2,2)), columns=list('AB'))
-B = DataFrame(np.random.randint(0, 20, (3,3)), columns=list('ABC'))
+a = DataFrame(np.random.randint(0, 10, (4,4)), columns=list('abcd'))
+b = DataFrame(np.random.randint(0, 20, (5,6)),
+              columns=list('abcdef'),
+              index=list('abcde'))
+
+# b.ix 可以按照index名称索引，可以按照index行的序号索引
+# b.loc 仅能按照index名称索引
+# b.ioc 仅能按照index的行的序号索引
