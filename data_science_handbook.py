@@ -269,5 +269,3 @@ hierindexDF_gbsum.unstack(0)
 hierindexDF_gbsum.unstack(1)
 hierindexDF_gbsum.unstack([2,0])
 hierindexDF_gbsum.unstack([2,0]).stack([1,2])
-
-
