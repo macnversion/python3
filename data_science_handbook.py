@@ -160,6 +160,12 @@ index = pd.MultiIndex.from_product([['a', 'b', 'c'], [1, 2]])
 data = pd.Series(np.random.randn(6), index=index)
 data.index.names = ['char', 'int']
 
+# %% combing datasets
+def make_df(col, ind):
+    data = {c:[str(i)+str(c) for i in ind] for c in col}
+    return pd.DataFrame(data, index=ind)
+
+
 # %% pandas 快速上手
 r = requests.get("http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data")
 with codecs.open('S1EP3_Iris.txt','w',encoding='utf-8') as f:
