@@ -10,6 +10,7 @@ import requests
 import scipy as sp
 import datetime
 import json
+import seaborn as sns
 # %% 
 # Accessing Documentation with ?
 # Accessing source code with ??
@@ -165,6 +166,24 @@ def make_df(col, ind):
     data = {c:[str(i)+str(c) for i in ind] for c in col}
     return pd.DataFrame(data, index=ind)
 
+planets = sns.load_dataset('planets')
+
+# %% Aggregation and groupby
+planets['mass'].sum()
+planets.groupby('method')['orbital_period']
+planets.groupby('method')['orbital_period'].median()
+
+for (method, group) in planets.groupby('method'):
+    print('{0:30s} shape={1}'.format(method, group.shape))
+
+planets.groupby('method')['year'].describe().stack()
+
+# aggregate
+planets.groupby('method').aggregate(['min', np.median, max])
+planets.groupby('method').aggregate({'mass':min, 'distance':max})
+
+# filtering
+
 
 # %% pandas 快速上手
 r = requests.get("http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data")
@@ -216,6 +235,7 @@ json_data = [{'name':'Wang','sal':50000,'job':'VP'},\
 data_employee = pd.read_json(json.dumps(json_data))
 data_employee_ri = data_employee.reindex(columns=['name',\
                                                   'job','sal','report'])
+
 
 # %% pandas数据操纵
 # pd.concat默认的参数类似于R语言的rbind, axis=1后类似于R语言中的cbind
