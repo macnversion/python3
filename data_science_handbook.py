@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import codecs
 import requests
 import scipy as sp
-import datetime
+from datetime import datetime
+from dateutil import parser
 import json
 import seaborn as sns
 # %% 
@@ -207,6 +208,8 @@ titanic.pivot_table('survived', ['sex', age], 'class')
 titanic.pivot_table(index='sex',
                     columns='class',
                     aggfunc={'survived':sum, 'fare':np.mean})
+
+# %% time series
 
 
 # %% pandas 快速上手
