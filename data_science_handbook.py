@@ -80,8 +80,8 @@ np.add.accumulate(x)
 x = np.linspace(0, 5, 50)
 y = np.linspace(0, 5, 50)[:, np.newaxis]
 z = np.sin(x)**10 + np.cos(10+y*x)*np.cos(x)
-plt.imshow(z)
-plt.colorbar()
+#plt.imshow(z)
+#plt.colorbar()
 
 # %% pandas
 area = pd.Series({'Alaska': 1723337, 'Texas': 695662,
@@ -162,11 +162,13 @@ data = pd.Series(np.random.randn(6), index=index)
 data.index.names = ['char', 'int']
 
 # %% combing datasets
+# 构造数据集和加载数据集
 def make_df(col, ind):
     data = {c:[str(i)+str(c) for i in ind] for c in col}
     return pd.DataFrame(data, index=ind)
-
+# 可查看sns.load_dataset?
 planets = sns.load_dataset('planets')
+titanic = sns.load_dataset('titanic')
 
 # %% Aggregation and groupby
 planets['mass'].sum()
@@ -182,7 +184,29 @@ planets.groupby('method')['year'].describe().stack()
 planets.groupby('method').aggregate(['min', np.median, max])
 planets.groupby('method').aggregate({'mass':min, 'distance':max})
 
-# filtering
+
+decade = 10*(planets['year']//10)
+decade = decade.astype(str) + 's'
+decade.name = 'decade'
+planets.groupby(['method', decade])['number'].sum().unstack().fillna(0)
+
+# %% pivot tables
+titanic.groupby('sex')['survived'].mean()
+titanic.groupby(['sex', 'class'])['survived'].mean().unstack()
+
+titanic.pivot_table('survived', index='sex', columns='class')
+titanic.pivot_table('survived', ['sex', 'who'], 'class')
+
+age = pd.cut(titanic['age'], [0, 18, 80])
+titanic.pivot_table('survived', ['sex', age], 'class')
+
+#DataFrame.pivot_table(data, values=None, index=None, columns=None,
+#aggfunc='mean', fill_value=None, margins=False,
+#dropna=True, margins_name='All')
+
+titanic.pivot_table(index='sex',
+                    columns='class',
+                    aggfunc={'survived':sum, 'fare':np.mean})
 
 
 # %% pandas 快速上手
