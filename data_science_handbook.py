@@ -243,8 +243,8 @@ multi1 = [('Row_'+str(x+1), 'Col_'+str(y+1)) for x in np.arange(4) \
 multi1 = pd.Index(multi1)
 multi1.names = ['index1', 'index2']
 
-dates = [datetime.datetime(2015,1,1),datetime.datetime(2015,1,8),
-         datetime.datetime(2015,1,30),datetime.datetime(2015,2,24)]
+dates = [datetime(2015,1,1),datetime(2015,1,8),
+         datetime(2015,1,30),datetime(2015,2,24)]
 pd.DatetimeIndex(dates)
 
 periodIndex1 = pd.period_range('2017-01', '2017-05', freq='M')
