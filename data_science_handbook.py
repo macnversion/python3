@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # %%
 import numpy as np
 import pandas as pd
@@ -12,6 +11,12 @@ from datetime import datetime
 from dateutil import parser
 import json
 import seaborn as sns
+import platform
+
+# %%
+# 判断操作系统的类型
+print(platform.system())
+
 # %% 
 # Accessing Documentation with ?
 # Accessing source code with ??
@@ -65,7 +70,6 @@ upper, lower = np.vsplit(y, [2])
 left, right = np.hsplit(y, [2])
 
 # advanced ufunc feathers
-
 x = np.arange(5)
 y = np.empty(5)
 np.multiply(x, 2, out=y) # out参数直接将结果输出到y
@@ -83,6 +87,16 @@ y = np.linspace(0, 5, 50)[:, np.newaxis]
 z = np.sin(x)**10 + np.cos(10+y*x)*np.cos(x)
 #plt.imshow(z)
 #plt.colorbar()
+
+
+# %% combing datasets
+# 构造数据集和加载数据集
+def make_df(col, ind):
+    data = {c:[str(i)+str(c) for i in ind] for c in col}
+    return pd.DataFrame(data, index=ind)
+# 可查看sns.load_dataset?
+planets = sns.load_dataset('planets')
+titanic = sns.load_dataset('titanic')
 
 # %% pandas
 area = pd.Series({'Alaska': 1723337, 'Texas': 695662,
@@ -162,15 +176,6 @@ index = pd.MultiIndex.from_product([['a', 'b', 'c'], [1, 2]])
 data = pd.Series(np.random.randn(6), index=index)
 data.index.names = ['char', 'int']
 
-# %% combing datasets
-# 构造数据集和加载数据集
-def make_df(col, ind):
-    data = {c:[str(i)+str(c) for i in ind] for c in col}
-    return pd.DataFrame(data, index=ind)
-# 可查看sns.load_dataset?
-planets = sns.load_dataset('planets')
-titanic = sns.load_dataset('titanic')
-
 # %% Aggregation and groupby
 planets['mass'].sum()
 planets.groupby('method')['orbital_period']
@@ -209,9 +214,6 @@ titanic.pivot_table(index='sex',
                     columns='class',
                     aggfunc={'survived':sum, 'fare':np.mean})
 
-# %% time series
-
-
 # %% pandas 快速上手
 r = requests.get("http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data")
 with codecs.open('S1EP3_Iris.txt','w',encoding='utf-8') as f:
@@ -225,6 +227,7 @@ for line in lines:
 iris = pd.read_csv('S1EP3_Iris.txt',header = None, encoding='utf-8')
 cnames = ['sepal_length','sepal_width','petal_length','petal_width','class']
 iris.columns = cnames
+
 # %%
 # 快速过滤
 iris[iris['petal_width'] == iris.petal_width.max()]
