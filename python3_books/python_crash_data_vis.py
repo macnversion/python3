@@ -62,7 +62,13 @@ class RandomWalk():
 while True:
     rw = RandomWalk()
     rw.fill_walk()
-    plt.scatter(rw.x_values, rw.y_values, s=10)
+    point_numbers = list(range(rw.num_points))
+    
+    # 突出起点和终点
+    plt.scatter(rw.x_values[0], rw.y_values[0], edgecolor='none', s=100)
+    plt.scatter(rw.x_values[-1], rw.y_values[-1], edgecolor='none', s=100)
+    plt.scatter(rw.x_values, rw.y_values, s=10,\
+                c=point_numbers, cmap=plt.cm.Blues, edgecolor='none')
     plt.show()
     
     keep_running = input('Make another walk?(Y/N):')
