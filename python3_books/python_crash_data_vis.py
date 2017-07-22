@@ -6,6 +6,9 @@ from random import randint
 import pygal
 import platform
 import csv
+from datetime import datetime
+import json
+import requests
 
 # %%
 
@@ -148,23 +151,85 @@ hist.y_value = 'frequency of value'
 hist.add('D6+D6', frequencies)
 hist.render_to_file('die_visual.svg')
 
-# %% 下载数据
-filename = r'D:\WorkSpace\CodeSpace\Python\Python3\sitka_weather_07-2014.csv'
+# %% 下载数据-csv文件的处理
+filename = 'sitka_weather_07-2014.csv'
 
 with open(filename) as f:
     reader = csv.reader(f)
     header_row = next(reader)
     
+    dates = []
     highs = []
     for row in reader:
+        current_date = datetime.strptime(row[0], '%Y-%m-%d')
+        dates.append(current_date)
+        
         high = int(row[1])
         highs.append(high)
 
 for index, column_header in enumerate(header_row):
     print(index, column_header)
+
+fig1 = plt.figure(dpi=128)    
+plt.plot(dates, highs, c='red')
+plt.title('Daily high tempeature, july 2014', fontsize=12)
+plt.xlabel('dates', fontsize=10)
+fig1.autofmt_xdate()
+plt.ylabel('temperature', fontsize=10)
+plt.tick_params(axis='both', which='major', labelsize=8)
+
+
+filename = 'sitka_weather_2014.csv'
+
+with open(filename) as f:
+    reader = csv.reader(f)
+    header_row = next(reader)
     
-plt.plot(highs, c='red')
-plt.title('Daily high tempeature, july 2014', fontsize=20)
-plt.xlabel('', fontsize=16)
-plt.ylabel('temperature', fontsize=16)
-plt.tick_params(axis='both', which='major', labelsize=14)
+    dates = []
+    highs = []
+    lows = []
+    for row in reader:
+        current_date = datetime.strptime(row[0], '%Y-%m-%d')
+        dates.append(current_date)
+        
+        high = int(row[1])
+        highs.append(high)
+        
+        low = int(row[3])
+        lows.append(low)
+
+fig2 = plt.figure(dpi=128)
+plt.plot(dates, highs, c='red')
+plt.plot(dates, lows, c='blue')
+plt.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
+plt.title('Daily high and low temperature 2014', fontsize=12)
+plt.xlabel('time', fontsize=10)
+fig2.autofmt_xdate()
+plt.ylabel('temp', fontsize=10)
+plt.tick_params(axis='both', which='major', labelsize=8)
+
+# %% json数据处理
+filename = 'population_data.json'
+with open(filename) as f:
+    popdata = json.load(f)
+
+for pop_dict in popdata:
+    if pop_dict['Year']=='2010':
+        countryname = pop_dict['Country Name']
+        population = int(float(pop_dict['Value']))
+        print(countryname + ':' + str(population))
+
+# %% 使用API
+url = 'https://api.github.com/search/repositories?q=language:python&sort=stars'
+r = requests.get(url)
+print('Status Code:', r.status_code)
+
+response_dict = r.json()
+print(response_dict.keys(), '\n')
+
+repo_dicts = response_dict['items']
+print('Repositories returned:', len(repo_dicts))
+
+repo_dict = repo_dicts[0]
+for key in sorted(repo_dict.keys()):
+    print(key)
