@@ -282,3 +282,38 @@ counts2.most_common(10)
 
 frame = DataFrame(records)
 tz_counts = frame['tz'].value_counts()
+clean_tz = frame['tz'].fillna('Missing')
+clean_tz[clean_tz==''] = 'Unknown'
+tz_counts = clean_tz.value_counts()
+
+
+result = Series([x.split()[0] for x in frame.a.dropna()])
+cframe = frame[frame.a.notnull()]
+operating_system = np.where(cframe['a'].str.contains('Windows'),
+                            'Windows', 'Not Windows')
+by_tz_os = cframe.groupby(['tz', operating_system])
+agg_counts = by_tz_os.size().unstack().fillna(0)
+indexer = agg_counts.sum(1).argsort()
+
+# %% 利用python进行数据分析-movielens 1M数据
+movie_path = data_path + '利用Python进行数据分析/ch02/movielens' + \
+'/movies.dat'
+ratings_path = data_path + '利用Python进行数据分析/ch02/movielens' + \
+'/ratings.dat'
+users_path = data_path + '利用Python进行数据分析/ch02/movielens' + \
+'/users.dat'
+
+unames = ['user_id', 'gender', 'age', 'occupation', 'zip']
+rnames = ['user_id', 'movie_id', 'rating', 'timestamp']
+mnames = ['movie_id', 'title', 'genres']
+
+movies = pd.read_table(movie_path, sep='::', header=None, names=mnames,
+                      engine='python')
+ratings = pd.read_table(ratings_path, sep='::', header=None, names=rnames,
+                      engine='python')
+users = pd.read_table(users_path, sep='::', header=None, names=unames,
+                      engine='python')
+
+data = pd.merge(pd.merge(ratings, movies), users)
+mean_rating = data.pivot_table('rating', index='title', columns='gender',
+                               aggfunc='mean')
