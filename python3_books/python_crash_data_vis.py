@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# python crash course and 利用python进行数据分析
 # %%
 import matplotlib.pyplot as plt
 from random import choice
@@ -9,11 +10,16 @@ import csv
 from datetime import datetime
 import json
 import requests
+from collections import defaultdict
+from collections import Counter
+import pandas as pd
+from pandas import DataFrame, Series
+import numpy as np
 
 # %%
 
-win_path = r'D:\WorkSpace\CodeSpace\Code.Data\Python'
-mac_path = r'D:\WorkSpace\CodeSpace\Code.Data\Python'
+win_path = r'D:/WorkSpace/CodeSpace/Code.Data/Python'
+mac_path = r'/Users/machuan/CodeSpace/Code.Data/python/'
 data_path = win_path if 'Windows' in platform.platform() else mac_path
 
 # %% 折线图
@@ -220,7 +226,9 @@ for pop_dict in popdata:
         print(countryname + ':' + str(population))
 
 # %% 使用API
-url = 'https://api.github.com/search/repositories?q=language:python&sort=stars'
+url = 'https://api.github.com/search/repositories?' + \
+'q=language:python&sort=stars'
+
 r = requests.get(url)
 print('Status Code:', r.status_code)
 
@@ -233,3 +241,43 @@ print('Repositories returned:', len(repo_dicts))
 repo_dict = repo_dicts[0]
 for key in sorted(repo_dict.keys()):
     print(key)
+
+
+# %%  利用python进行数据分析-usa.gov数据
+path = data_path + '利用Python进行数据分析/ch02/' + \
+'usagov_bitly_data2012-03-16-1331923249.txt'
+
+records = [json.loads(line) for line in open(path)]
+time_zones = [record['tz'] for record in records if 'tz' in record]
+
+
+def get_counts(sequence):
+    counts = {}
+    for x in sequence:
+        if x in counts:
+            counts[x] += 1
+        else:
+            counts[x] = 1
+    return counts
+
+
+def get_counts2(sequence):
+    counts = defaultdict(int)
+    for x in sequence:
+        counts[x] += 1
+    return counts
+
+
+def top_counts(cdict, n=10):
+    value_key_pairs = [(counts, tz) for tz, counts in cdict.items()]
+    value_key_pairs.sort()
+    return value_key_pairs[-n:]
+
+
+counts = get_counts(time_zones)
+top_counts(counts)
+
+counts2 = Counter(time_zones)
+counts2.most_common(10)
+
+frame = DataFrame(records)
