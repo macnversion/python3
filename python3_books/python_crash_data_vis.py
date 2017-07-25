@@ -18,7 +18,7 @@ import numpy as np
 
 # %%
 
-win_path = r'D:/WorkSpace/CodeSpace/Code.Data/Python'
+win_path = r'D:/WorkSpace/CodeSpace/Code.Data/Python/'
 mac_path = r'/Users/machuan/CodeSpace/Code.Data/python/'
 data_path = win_path if 'Windows' in platform.platform() else mac_path
 
@@ -281,3 +281,4 @@ counts2 = Counter(time_zones)
 counts2.most_common(10)
 
 frame = DataFrame(records)
+tz_counts = frame['tz'].value_counts()
