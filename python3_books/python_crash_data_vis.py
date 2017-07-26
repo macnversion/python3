@@ -323,6 +323,16 @@ mean_rating = mean_rating.iloc[active_titles]
 
 top_female_rating = mean_rating.sort_values(by='F', ascending=False)
 
-mean_rating['diff'] = mean_rating['F'] - mean_rating['M']
+mean_rating['diff'] = mean_rating['M'] - mean_rating['F']
 sort_by_diff = mean_rating.sort_values(by='diff')
+
+rating_std_by_title = data.groupby('title')['rating'].std()
+rating_std_by_title = rating_std_by_title.loc[active_titles]
+
+
+# %% 利用python进行数据分析-全美婴儿姓名
+yob1880_path = data_path + '利用Python进行数据分析/ch02/names' + \
+'/yob1880.txt'
+names1880 = pd.read_csv(yob1880_path, names=['name', 'sex', 'births'])
+
 
