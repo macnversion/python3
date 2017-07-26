@@ -324,4 +324,5 @@ mean_rating = mean_rating.iloc[active_titles]
 top_female_rating = mean_rating.sort_values(by='F', ascending=False)
 
 mean_rating['diff'] = mean_rating['F'] - mean_rating['M']
+sort_by_diff = mean_rating.sort_values(by='diff')
 
