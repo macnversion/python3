@@ -317,3 +317,11 @@ users = pd.read_table(users_path, sep='::', header=None, names=unames,
 data = pd.merge(pd.merge(ratings, movies), users)
 mean_rating = data.pivot_table('rating', index='title', columns='gender',
                                aggfunc='mean')
+rating_by_title = data.groupby('title').size()
+active_titles = rating_by_title[rating_by_title>250]
+mean_rating = mean_rating.iloc[active_titles]
+
+top_female_rating = mean_rating.sort_values(by='F', ascending=False)
+
+mean_rating['diff'] = mean_rating['F'] - mean_rating['M']
+
