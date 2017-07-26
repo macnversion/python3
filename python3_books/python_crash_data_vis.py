@@ -334,5 +334,38 @@ rating_std_by_title = rating_std_by_title.loc[active_titles]
 yob1880_path = data_path + '利用Python进行数据分析/ch02/names' + \
 '/yob1880.txt'
 names1880 = pd.read_csv(yob1880_path, names=['name', 'sex', 'births'])
+names1880.groupby('sex').births.sum()
+
+years = range(1980, 2011)
+pieces = []
+columns = ['name', 'sex', 'births']
+for year in years:
+    path = data_path + '利用Python进行数据分析/ch02/names' + '/yob%d.txt' % year
+    frame = pd.read_csv(path, names=columns)
+    frame['year'] = year
+    pieces.append(frame)
+
+names = pd.concat(pieces, ignore_index=True)
+
+total_births = names.pivot_table('births', index='year', columns='sex',
+                                 aggfunc='sum')
+total_births.plot(title='Total births by year and sex')
 
 
+def add_prop(group):
+    births = group.births.astype(float)
+    group['prop'] = births/births.sum()
+    return group
+
+names = names.groupby(['year', 'sex']).apply(add_prop)
+np.allclose(names.groupby(['year', 'sex']).prop.sum(), 1)
+
+
+def get_top1000(group):
+    return group.sort_values(by='births', ascending=True)[:1000]
+
+top1000 = names.groupby(['year', 'sex']).apply(get_top1000)
+boys = top1000[top1000.sex=='M']
+girls = top1000[top1000.sex=='F']
+total_births = top1000.pivot_table('births', index='year', columns='sex',
+                                   aggfunc='sum')
