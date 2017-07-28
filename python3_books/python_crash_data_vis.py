@@ -16,6 +16,7 @@ import pandas as pd
 from pandas import DataFrame, Series
 import numpy as np
 import os
+import datetime
 
 # %%
 
@@ -368,5 +369,10 @@ def get_top1000(group):
 top1000 = names.groupby(['year', 'sex']).apply(get_top1000)
 boys = top1000[top1000.sex=='M']
 girls = top1000[top1000.sex=='F']
-total_births = top1000.pivot_table('births', index='year', columns='sex',
-                                   aggfunc='sum')
+total_births = top1000.pivot_table('births', index='year', columns='name',
+                                   aggfunc=sum)
+
+subset = total_births[['John', 'Harry', 'Mary', 'Marilyn']]
+
+# %% 利用python进行数据分析-numpy and pandas
+
