@@ -4,7 +4,7 @@
 import matplotlib.pyplot as plt
 from random import choice
 from random import randint
-import pygal
+#import pygal
 import platform
 import csv
 from datetime import datetime
@@ -17,7 +17,7 @@ from pandas import DataFrame, Series
 import numpy as np
 import os
 import datetime
-from pandas_datareader import data, wb
+#from pandas_datareader import data, wb
 
 # %%
 
