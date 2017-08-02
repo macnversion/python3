@@ -17,6 +17,7 @@ from pandas import DataFrame, Series
 import numpy as np
 import os
 import datetime
+from pandas_datareader import data, wb
 
 # %%
 
@@ -375,4 +376,9 @@ total_births = top1000.pivot_table('births', index='year', columns='name',
 subset = total_births[['John', 'Harry', 'Mary', 'Marilyn']]
 
 # %% 利用python进行数据分析-numpy and pandas
-
+frame = pd.DataFrame({'a':np.arange(7),
+                      'b':range(7, 0, -1),
+                      'c':['one']*3 + ['two']*4,
+                      'd':[1,2,3,1,2,3,0]})
+frame.set_index(['c', 'd'])
+frame.set_index(['c', 'd'], drop=False)
