@@ -17,6 +17,7 @@ from pandas import DataFrame, Series
 import numpy as np
 import os
 import datetime
+import re
 #from pandas_datareader import data, wb
 
 # %%
@@ -376,9 +377,67 @@ total_births = top1000.pivot_table('births', index='year', columns='name',
 subset = total_births[['Aaban', 'Aabid', 'Aadhav', 'Aabriella']]
 
 # %% 利用python进行数据分析-numpy and pandas
-frame = pd.DataFrame({'a':np.arange(7),
-                      'b':range(7, 0, -1),
-                      'c':['one']*3 + ['two']*4,
-                      'd':[1,2,3,1,2,3,0]})
-frame.set_index(['c', 'd'])
-frame.set_index(['c', 'd'], drop=False)
+genre_iters = (set(x.split('|')) for x in movies.genres)
+genres = sorted(set.union(*genre_iters))
+
+dummies = DataFrame(np.zeros((len(movies), len(genres))), columns=genres)
+
+for i, gen in enumerate(movies.genres):
+    dummies.loc[i, gen.split('|')] = 1
+
+movies_windic = movies.join(dummies.add_prefix('Genre_'))
+
+
+# 正则表达式
+text = """Dave dave@google.com
+Steve steve@gmail.com
+Rob rob@gmail.com
+Ryan ryan@yahoo.com
+"""
+
+pattern = r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'
+regex = re.compile(pattern, flags=re.IGNORECASE)
+
+pattern = r'([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\.([A-z]{2,4})'
+regex = re.compile(pattern, flags=re.IGNORECASE)
+
+# %% usa食品数据库
+json_file_path = data_path + \
+    '利用Python进行数据分析/ch07/' + \
+    'foods-2011-10-03.json'
+db = json.load(open(json_file_path))
+
+nutrients = db[0]['nutrients']
+info_keys = ['description', 'group', 'id', 'manufacturer']
+info = DataFrame(db, columns=info_keys)
+
+nutrients = []
+for rec in db:
+    funts = DataFrame(rec['nutrients'])
+    funts['id'] = rec['id']
+    nutrients.append(funts)
+
+nutrients = pd.concat(nutrients, ignore_index=True)
+nutrients = nutrients.drop_duplicates()
+
+col_mapping = {'description':'food',
+               'group':'fgroup'}
+info = info.rename(columns=col_mapping, copy=False)
+col_mapping = {'description':'nutrient',
+               'group':'nutgroup'}
+nutrients = nutrients.rename(columns=col_mapping, copy=False)
+ndata = pd.merge(info, nutrients, on='id', how='outer')
+
+result = ndata.groupby(['food', 'fgroup'])['value'].quantile(0.5)
+
+
+# %% matplotlib 基础
+fig = plt.figure()
+ax1 = fig.add_subplot(2,2,1)
+_ = ax1.hist(np.random.randn(100), bins=20, color='r', alpha=0.5)
+
+ax2 = fig.add_subplot(2,2,2)
+ax2.scatter(np.arange(30), np.arange(30) + 3*np.random.randn(30))
+
+ax3 = fig.add_subplot(2,2,3)
+plt.plot(np.random.randn(50).cumsum(), 'k--')
