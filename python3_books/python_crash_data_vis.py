@@ -456,5 +456,13 @@ ax.set_title('a matplotlib test result')
 ax.set_xlabel('Stage')
 
 # %% 数据聚合与分组计算
-os.chdir(r'D:\WorkSpace\CodeSpace\Code.Data\Python\利用Python进行数据分析\ch08')
+def peak_to_peak(arr):
+    return(arr.max() - arr.min())
+
+
+os.chdir(data_path + r'利用Python进行数据分析/ch08')
 tips = pd.read_csv('tips.csv')
+tips['tip_pct'] = tips['tip']/tips['total_bill']
+
+grouped = tips.groupby(['sex', 'smoker'])
+grouped.agg('mean', 'sum', peak_to_peak())
