@@ -435,9 +435,26 @@ result = ndata.groupby(['food', 'fgroup'])['value'].quantile(0.5)
 fig = plt.figure()
 ax1 = fig.add_subplot(2,2,1)
 _ = ax1.hist(np.random.randn(100), bins=20, color='r', alpha=0.5)
-
 ax2 = fig.add_subplot(2,2,2)
 ax2.scatter(np.arange(30), np.arange(30) + 3*np.random.randn(30))
-
 ax3 = fig.add_subplot(2,2,3)
 plt.plot(np.random.randn(50).cumsum(), 'k--')
+
+fig, axes = plt.subplots(2, 2, sharex=True, sharey=True)
+for i in range(2):
+    for j in range(2):
+        axes[i, j].hist(np.random.randn(500), bins=50, color='k', alpha=0.5)
+plt.subplots_adjust(wspace=0, hspace=0)
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.plot(np.random.randn(1000).cumsum())
+ticks = ax.set_xticks([0, 250, 500, 750, 1000])
+labels = ax.set_xticklabels(['one', 'two', 'three', 'four', 'five'],
+                            rotation=30, fontsize='small')
+ax.set_title('a matplotlib test result')
+ax.set_xlabel('Stage')
+
+# %% 数据聚合与分组计算
+os.chdir(r'D:\WorkSpace\CodeSpace\Code.Data\Python\利用Python进行数据分析\ch08')
+tips = pd.read_csv('tips.csv')
