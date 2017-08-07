@@ -16,7 +16,7 @@ import pandas as pd
 from pandas import DataFrame, Series
 import numpy as np
 import os
-import datetime
+from datetime import datetime
 import re
 #from pandas_datareader import data, wb
 
@@ -465,4 +465,18 @@ tips = pd.read_csv('tips.csv')
 tips['tip_pct'] = tips['tip']/tips['total_bill']
 
 grouped = tips.groupby(['sex', 'smoker'])
-grouped.agg('mean', 'sum', peak_to_peak())
+grouped_pct = grouped['tip_pct']
+
+functions = ['count', 'mean', 'max']
+result = grouped['total_bill', 'tip_pct'].agg(functions)
+
+def top(df, n=5, column='tip_pct'):
+    return(df.sort_values(by=column)[-n:])
+
+
+tips.groupby('smoker').apply(top)
+tips.groupby(['smoker', 'day']).apply(top, n=1, column='total_bill')
+
+# 分位数和桶分析
+frame = DataFrame({'data1':np.random.randn(100),
+                   'data2':np.random.randn(100)})
