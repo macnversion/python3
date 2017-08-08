@@ -480,3 +480,11 @@ tips.groupby(['smoker', 'day']).apply(top, n=1, column='total_bill')
 # 分位数和桶分析
 frame = DataFrame({'data1':np.random.randn(100),
                    'data2':np.random.randn(100)})
+
+
+# 随机采样和排列
+# 红桃：hearts， 黑桃：spades， 梅花：clubs， 方片：diamonds
+suits = ['H', 'S', 'C', 'D']
+card_val = (range(1, 11) + [10]*3)*4
+base_name = ['A'] + range(2, 11) + ['J', 'Q', 'K']
+cards = []
