@@ -16,7 +16,6 @@ import pandas as pd
 from pandas import DataFrame, Series
 import numpy as np
 import os
-from datetime import datetime
 import re
 #from pandas_datareader import data, wb
 
@@ -493,3 +492,34 @@ for suit in suits:
     cards.extend(str(num) + suit for num in base_names)
 
 deck = Series(card_val, index=cards)
+
+
+def draw(deck, n=5):
+    return(deck.take(np.random.permutation(len(deck)))[:n])
+
+
+get_suit = lambda card: card[-1]
+deck.groupby(get_suit).apply(draw)
+
+# 示例加权平均数和相关系数
+os.chdir(data_path + r'利用Python进行数据分析/ch09')
+close_px = pd.read_csv('stock_px.csv', parse_dates=True, index_col=0)
+rets = close_px.pct_change().dropna()
+spx_corr = lambda x: x.corrwith(x['SPX'])
+by_year = rets.groupby(lambda x: x.year)
+by_year.apply(spx_corr)
+
+
+# 透视表和交叉表
+tips.pivot_table(['total_bill', 'size'],
+                 index=['sex', 'day'],
+                 columns='smoker')
+
+# 示例：联邦选举委员会数据库
+fec = pd.read_csv('P00000001-ALL.csv')
+unique_cand = fec.cand_nm.unique()
+#fec['party'] = fec.cand_nm.map(parties)
+
+
+# %% 时间序列
+from dateutiltil.paeser import parse
