@@ -519,7 +519,8 @@ tips.pivot_table(['total_bill', 'size'],
 # 示例：联邦选举委员会数据库
 fec = pd.read_csv('P00000001-ALL.csv')
 unique_cand = fec.cand_nm.unique()
-fec['party'] = fec.cand_nm.map(parties)
+#fec['party'] = fec.cand_nm.map(parties)
 
 
 # %% 时间序列
+now = datetime.now()
