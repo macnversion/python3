@@ -485,6 +485,11 @@ frame = DataFrame({'data1':np.random.randn(100),
 # 随机采样和排列
 # 红桃：hearts， 黑桃：spades， 梅花：clubs， 方片：diamonds
 suits = ['H', 'S', 'C', 'D']
-card_val = (range(1, 11) + [10]*3)*4
-base_name = ['A'] + range(2, 11) + ['J', 'Q', 'K']
+card_val = (list(range(1, 11)) + [10]*3)*4
+base_names = ['A'] + list(range(2, 11)) + ['J', 'Q', 'K']
 cards = []
+
+for suit in suits:
+    cards.extend(str(num) + suit for num in base_names)
+
+deck = Series(card_val, index=cards)
