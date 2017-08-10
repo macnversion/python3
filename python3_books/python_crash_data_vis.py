@@ -16,7 +16,6 @@ import pandas as pd
 from pandas import DataFrame, Series
 import numpy as np
 import os
-from datetime import datetime
 import re
 #from pandas_datareader import data, wb
 
@@ -512,6 +511,8 @@ by_year.apply(spx_corr)
 
 
 # %% 透视表和交叉表
+# 透视表和交叉表
+
 tips.pivot_table(['total_bill', 'size'],
                  index=['sex', 'day'],
                  columns='smoker')
@@ -523,4 +524,9 @@ unique_cand = fec.cand_nm.unique()
 
 
 # %% 时间序列
+
 now = datetime.now()
+from dateutil.paeser import parse
+
+longer_ts = Series(np.random.randn(1000),
+                   index=pd.date_range('1/1/2007', periods=1000))
