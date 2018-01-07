@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1aafd01c-80a4-4569-b3dc-bf8fcb7b672c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/python3_books/python_for_data_analysis/.ipynb_checkpoints/pandas-checkpoint.ipynb" afterPath="$PROJECT_DIR$/python3_books/python_for_data_analysis/.ipynb_checkpoints/pandas-checkpoint.ipynb" />
-      <change beforePath="$PROJECT_DIR$/python3_books/python_for_data_analysis/pandas.ipynb" afterPath="$PROJECT_DIR$/python3_books/python_for_data_analysis/pandas.ipynb" />
+      <change beforePath="$PROJECT_DIR$/python3_books/python_for_data_analysis/reg_expression.ipynb" afterPath="$PROJECT_DIR$/python3_books/python_for_data_analysis/reg_expression.ipynb" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
