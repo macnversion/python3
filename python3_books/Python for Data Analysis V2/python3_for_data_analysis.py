@@ -151,6 +151,10 @@ bins = [18, 25, 35, 60, 100]
 group_names = ['Youth', 'YoungAdult', 'MiddleAged', 'Senior']
 cats = pd.cut(ages, bins, labels=group_names)
 # %% 数据汇总和分组计算
+df = pd.DataFrame({'key1' : ['a', 'a', 'b', 'b', 'a'],
+                   'key2' : ['one', 'two', 'one', 'two', 'one'], 
+                   'data1' : np.random.randn(5), 
+                   'data2' : np.random.randn(5)})
 
 # %% API相关交互
 url = r'https://api.github.com/repos/pandas-dev/pandas/issues'
