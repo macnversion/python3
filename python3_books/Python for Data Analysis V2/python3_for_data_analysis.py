@@ -9,8 +9,9 @@ from datetime import datetime, date, time
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import random
-import json
-import csv
+import requests
+import re
+import seaborn
 # %% dataset路径
 '''
 value = true-expr if condition else false-expr
@@ -112,7 +113,96 @@ for piece in chunker:
 tot = tot.sort_values(ascending=False)
 
 data = pd.read_json('./dataset/population_data.json')
+
+# %% 数据去重
+data = pd.DataFrame({'k1': ['one', 'two'] * 3 + ['two'],
+                     'k2': [1, 1, 2, 3, 3, 4, 4]})
+data.duplicated()
+data.drop_duplicates()
+# %% 数据透视
+data = pd.read_csv('./dataset/macrodata.csv')
+periods = pd.PeriodIndex(year=data.year, quarter=data.quarter, name='date')
+columns = pd.Index(['realgdp', 'infl', 'unemp'], name='item')
+data = data.reindex(columns=columns)
+data.index = periods.to_timestamp('D', 'end')
+ldata = data.stack().reset_index().rename(columns={0: 'value'})
+pivoted = ldata.pivot('date', 'item', 'value')
+
+ldata['value2'] = np.random.randn(len(data))
+pivoted = ldata.pivot('data', 'item')
+# %%
+data = pd.DataFrame({'food': ['bacon', 'pulled pork', 'bacon',
+                              'Pastrami', 'corned beef', 'Bacon',
+                              'pastrami', 'honey ham', 'nova lox'],
+                     'ounces': [4, 3, 12, 6, 7.5, 8, 3, 5, 6]})
+meat_to_animal = {
+    'bacon': 'pig',
+    'pulled pork': 'pig',
+    'pastrami': 'cow',
+    'corned beef': 'cow',
+    'honey ham': 'pig',
+    'nova lox': 'salmon'
+}
+data['animal'] = data['food'].str.lower().map(meat_to_animal)
+data['animal'] = data['food'].map(lambda x: meat_to_animal[x.lower()])
+
+ages = [20, 22, 25, 27, 21, 23, 37, 31, 61, 45, 41, 32]
+bins = [18, 25, 35, 60, 100]
+group_names = ['Youth', 'YoungAdult', 'MiddleAged', 'Senior']
+cats = pd.cut(ages, bins, labels=group_names)
+# %% 数据汇总和分组计算
+
+# %% API相关交互
+url = r'https://api.github.com/repos/pandas-dev/pandas/issues'
+resp = requests.get(url)
+data = resp.json()
+issues = DataFrame(data, columns=['number', 'title', 'labels', 'states'])
+# %% 字符串处理 & 正则表达式
+val = 'a,b, guido'
+val.split(',')
+pieces = [x.strip() for x in val.split(',')]
+
+text = "foo    bar\t baz  \tqux"
+re.split('\s+', text)
+
+regex = re.compile('\s+')
+regex.findall(text)
 # %% 时间序列
 dt = datetime(2011, 10, 29, 20, 30, 21)
 dt.year
 dt.time()
+
+# %% 数据可视化
+fig = plt.figure()
+ax1 = fig.add_subplot(2,2,1)
+ax2 = fig.add_subplot(2,2,2)
+ax3 = fig.add_subplot(2,2,3)
+plt.plot(np.random.randn(50).cumsum(), 'k--')
+_ = ax1.hist(np.random.randn(100), bins=20, color='k', alpha=0.3)
+ax2.scatter(np.arange(30), np.arange(30)+3*np.random.randn(30))
+
+# %% 线图
+fig, axes = plt.subplots(2,1)
+s = Series(np.random.randn(10).cumsum(), index=np.arange(0, 100, 10))
+df = pd.DataFrame(np.random.randn(10, 4).cumsum(0),
+                  columns=['A', 'B', 'C', 'D'],
+                  index=np.arange(0, 100, 10))
+axes[0].plot(s)
+axes[1].plot(df)
+# %% 条形图
+fig, axes = plt.subplots(2,1)
+data = Series(np.random.randn(16), index=list('abcdefghijklmnop'))
+data.plot.bar(ax=axes[0], color='k', alpha=0.7)
+data.plot.barh(ax=axes[1], color='k', alpha=0.7)
+
+df = pd.DataFrame(np.random.rand(6, 4),
+                  index=['one', 'two', 'three', 'four', 'five', 'six'],
+                  columns=pd.Index(['A', 'B', 'C', 'D'], name='Genus'))
+df.plot.bar()
+
+# %% 柱状图和密度图
+tips = pd.read_csv('./dataset/tips.csv')
+party_counts = pd.crosstab(tips['day'], tips['size'])
+party_counts = party_counts.loc[:, 2:5]
+party_pcts = party_counts.div(party_counts.sum(1), axis=0)
+
