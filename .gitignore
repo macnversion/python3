@@ -1,4 +1,5 @@
 .spyproject
+.idea/
 /.idea
 /.spyproject
 ./python3_books/python_for_data_analysis/.ipynb_checkpoints
