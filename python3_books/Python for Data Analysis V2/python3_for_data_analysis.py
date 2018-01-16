@@ -172,9 +172,12 @@ re.split('\s+', text)
 regex = re.compile('\s+')
 regex.findall(text)
 # %% 时间序列
-dt = datetime(2011, 10, 29, 20, 30, 21)
-dt.year
-dt.time()
+now = datetime.now()
+now.year
+
+stamp = datetime(2018, 1, 3)
+str(stamp)
+stamp.strftime('%Y-%m-%d')
 
 # %% 数据可视化
 fig = plt.figure()
