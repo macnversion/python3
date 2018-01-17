@@ -12,6 +12,7 @@ import random
 import requests
 import re
 import seaborn
+from dateutil.parser import parse
 # %% dataset路径
 '''
 value = true-expr if condition else false-expr
@@ -172,12 +173,15 @@ re.split('\s+', text)
 regex = re.compile('\s+')
 regex.findall(text)
 # %% 时间序列
-now = datetime.now()
-now.year
+dates = [datetime(2011, 1, 2), datetime(2011, 1, 5),
+         datetime(2011, 1, 7), datetime(2011, 1, 8), 
+         datetime(2011, 1, 10), datetime(2011, 1, 12)]
+ts = Series(np.random.randn(6), index=dates)
+ts['20110102'] # 可直接使用字符串索引
 
-stamp = datetime(2018, 1, 3)
-str(stamp)
-stamp.strftime('%Y-%m-%d')
+long_ts = Series(np.random.randn(1000), index=pd.date_range('1/1/2000', periods=1000))
+long_ts['2001']
+long_ts.truncate(after='1/9/2001')
 
 # %% 数据可视化
 fig = plt.figure()
