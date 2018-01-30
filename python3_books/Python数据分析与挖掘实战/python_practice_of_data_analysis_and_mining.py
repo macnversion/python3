@@ -78,4 +78,25 @@ for i in catering_sale.columns:
         if (catering_sale[i].isnull())[j]:
             catering_sale[i][j] = ployinterp_column(catering_sale[i], j)
 
-# %%
+# %% 逻辑回归
+bankloan = pd.read_excel('./dataset/Python数据分析与挖掘实战/bankloan.xls')
+xx = bankloan.iloc[:, :8]
+yy = bankloan.iloc[:, 8]
+x = xx.as_matrix()
+y = yy.as_matrix()
+
+
+from sklearn.linear_model import LogisticRegression as LR
+from sklearn.linear_model import RandomizedLogisticRegression as RLR
+
+rlr = RLR()
+rlr.fit(x, y)
+rlr.get_support()
+print(u'通过随机逻辑回归模型筛选特征结束 。')
+print(u'有效特征为：%s' % ','.join(xx.columns[rlr.get_support()]))
+
+x = xx[xx.columns[rlr.get_support()]].as_matrix()
+lr = LR()
+lr.fit(x, y)
+print(u'逻辑回归模型训练结束')
+print(u'模型平均正确率为:%s' % lr.score(x, y))
