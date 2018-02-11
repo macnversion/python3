@@ -100,3 +100,17 @@ lr = LR()
 lr.fit(x, y)
 print(u'逻辑回归模型训练结束')
 print(u'模型平均正确率为:%s' % lr.score(x, y))
+
+# %% 决策树
+sales_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/sales_data.xls')
+sales_data[sales_data == u'好'] = 1
+sales_data[sales_data == u'是'] = 1
+sales_data[sales_data == u'高'] = 1
+sales_data[sales_data != 1] = -1
+
+x = sales_data.iloc[:, :3].as_matrix().astype(int)
+y = sales_data.iloc[:, :3].as_matrix().astype(int)
+
+from sklearn.tree import DecisionTreeClassifier as DTC
+dtc = DTC(criterion='entropy')
+dtc.fit(x,y)
