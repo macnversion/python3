@@ -114,3 +114,6 @@ y = sales_data.iloc[:, :3].as_matrix().astype(int)
 from sklearn.tree import DecisionTreeClassifier as DTC
 dtc = DTC(criterion='entropy')
 dtc.fit(x,y)
+
+# %% 电力窃漏用户自动识别
+model_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/model.xls')
