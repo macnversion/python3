@@ -78,4 +78,4 @@ from operator import itemgetter
 sorted_support = sorted(support.items(), key=itemgetter(1), reverse=True)
 for index in range(n_features):
     print('Rules #{0}'.format(index+1))
-    (premise, conclusion) = sorted_support()
+    (premise, conclusion) = sorted_support[index]
