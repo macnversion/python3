@@ -147,6 +147,8 @@ all_predictors = {variable: train(X_train, y_train, variable) for variable in ra
 import csv
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cross_validation import train_test_split
+from sklearn.cross_validation import cross_val_score
+from matplotlib import pyplot as plt
 
 X = np.zeros((351, 34), dtype='float')
 y = np.zeros((351, ), dtype='bool')
@@ -170,3 +172,25 @@ y_predicted = estimator.predict(X_test)
 accuracy = np.mean(y_test == y_predicted)*100
 print('The accuracy is {0:.1f}%'.format(accuracy))
 
+scores = cross_val_score(estimator, X, y, scoring='accuracy')
+average_accuracy = np.mean(scores) * 100
+print('The average accuracy is {0:.1f}%'.format(average_accuracy))
+
+avg_scores = []
+all_scores = []
+parameter_values = list(range(1, 21))
+for n_neighbors in parameter_values:
+    estimator = KNeighborsClassifier(n_neighbors=n_neighbors)
+    scores = cross_val_score(estimator, X, y, scoring='accuracy')
+    avg_scores.append(np.mean(scores))
+    all_scores.append(scores)
+    
+plt.plot(parameter_values, avg_scores, '-o')
+
+# %% 用决策树预测球队获胜
+dataset = pd.read_csv('./dataset/python数据挖掘入门与实践/leagues_NBA_2014_games_games.csv',
+                      parse_dates=['Date'])
+dataset.columns = ['Date', 'ScoreType', 'VisitorTeam', 'VisitorPts', 'HomeTeam', 'HomePts', 'OT?', 'Notes']
+
+# %% test 代码测试
+pd.read_csv('./dataset/python数据挖掘入门与实践/ionosphere.data', header=None).as_matrix()
