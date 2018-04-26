@@ -169,7 +169,7 @@ print('Each sample has {} features'.format(X_train.shape[1]))
 estimator = KNeighborsClassifier()
 estimator.fit(X_train, y_train)
 y_predicted = estimator.predict(X_test)
-accuracy = np.mean(y_test == y_predicted)*100
+accuracy = np.mean(y_test == y_predicted)*100 
 print('The accuracy is {0:.1f}%'.format(accuracy))
 
 scores = cross_val_score(estimator, X, y, scoring='accuracy')
