@@ -36,3 +36,40 @@ x1[0] = 3.14
 print('x1=', x1)
 
 # 获取短数组： x[start: stop: step]
+# 数组的变形
+x = np.array([1, 2, 3])
+x.reshape(1,3)
+x[np.newaxis, :] # 通过np.newaxis变形
+x[:, np.newaxis]
+
+# 数组的拼接和分裂
+'''
+数组拼接函数
+np.concatenate([x, y, z])
+np.vstack([x, grid])
+np.hstack([x, grid])
+'''
+x = np.array([1, 2, 3])
+y = np.array([3, 2, 1])
+z = np.array([99, 99, 99])
+np.concatenate([x, y])
+np.concatenate([x, y, z])
+
+grid = np.array([[1, 2, 3],
+                [4, 5, 6]])
+np.concatenate([grid, grid])
+np.concatenate([grid, grid], axis=1)
+
+np.vstack([x, grid]) # 垂直方向的合并
+y = np.array([[99],
+              [99]])
+np.hstack([y, grid]) # 水平方向的合并
+
+'''
+数组分裂的函数
+np.split(x, index)
+np.vsplit()
+np.hsplit()
+'''
+x = [1, 2, 3, 4, 99, 99, 3, 2, 1]
+grid = np.arange(16).reshape((4, 4))
