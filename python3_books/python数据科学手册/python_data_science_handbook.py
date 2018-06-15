@@ -73,3 +73,24 @@ np.hsplit()
 '''
 x = [1, 2, 3, 4, 99, 99, 3, 2, 1]
 grid = np.arange(16).reshape((4, 4))
+
+# 通用函数
+def compute_reciprocals(values):
+    out = np.empty(len(values))
+    for i in range(len(values)):
+        out[i] = 1.0/values[i]
+    return out
+
+values = np.random.randint(1, 10, size=5)
+compute_reciprocals(values)
+#big_array = np.random.randint(1, 100, size=1000000)
+#timeit compute_reciprocals(big_array) # run this in console
+
+# 通用函数的高级特性
+x = np.arange(5)
+y = np.empty(5)
+np.multiply(x, 10, out=y) # out参数指定输出的位置
+
+
+# 聚合
+M = np.random
