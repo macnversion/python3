@@ -2,9 +2,15 @@
 
 # %%
 import os
+import platform
 import numpy as np
 import pandas as pd
 from pandas import DataFrame, Series
+
+# %% 设置工作路径
+win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
+if 'Windows' in platform.platform():
+    data_path = win_path
 
 # %% 计算代码的执行时间
 # %timeit L = [n ** 2 for n in range(100)]
@@ -93,4 +99,11 @@ np.multiply(x, 10, out=y) # out参数指定输出的位置
 
 
 # 聚合
-M = np.random
+M = np.random.random((3,4))
+M.min(axis=0)
+
+# 示例：美国总统的身高
+os.chdir('.\\dataset\\python数据科学手册')
+data = pd.read_csv('president_heights.csv')
+os.chdir(data_path)
+heights = np.array(data['height(cm)'])
