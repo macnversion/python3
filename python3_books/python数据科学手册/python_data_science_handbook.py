@@ -6,6 +6,8 @@ import platform
 import numpy as np
 import pandas as pd
 from pandas import DataFrame, Series
+import matplotlib.pyplot as plt
+import seaborn
 
 # %% 设置工作路径
 win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
@@ -97,13 +99,24 @@ x = np.arange(5)
 y = np.empty(5)
 np.multiply(x, 10, out=y) # out参数指定输出的位置
 
-
 # 聚合
 M = np.random.random((3,4))
 M.min(axis=0)
 
-# 示例：美国总统的身高
-os.chdir('.\\dataset\\python数据科学手册')
-data = pd.read_csv('president_heights.csv')
-os.chdir(data_path)
-heights = np.array(data['height(cm)'])
+# 广播
+X = np.random.random((10, 3))
+X_mean = X.mean(axis=0)
+X_centered = X - X_mean
+
+# 布尔掩码
+rainfall = pd.read_csv('./dataset/python数据科学手册/Seattle2014.csv')['PRCP'].values
+inches = rainfall/254
+seaborn.set()
+plt.hist(inches, 40)
+rainy = (inches > 0)
+
+# 花式索引
+rand = np.random.RandomState(42)
+x = np.random.randint(100, size=10)
+ind = np.array([[3, 7],
+                [4, 5]])
