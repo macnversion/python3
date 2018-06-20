@@ -120,3 +120,42 @@ rand = np.random.RandomState(42)
 x = np.random.randint(100, size=10)
 ind = np.array([[3, 7],
                 [4, 5]])
+    
+# 数组区间的划分
+np.random.seed(42)
+x = np.random.randn(100)
+bins = np.linspace(-5, 5, 20)
+counts = np.zeros_like(bins)
+i = np.searchsorted(bins, x) # 这是一个神奇的函数
+np.add.at(counts, i, 1)
+
+
+# %% 数组的排序
+def selection_sort(x): # 选择排序
+    for i in range(len(x)):
+        swap = i + np.argmin(x[i:])
+        (x[i], x[swap]) = (x[swap], x[i])
+    return x
+
+x = np.array([7, 2, 3, 1, 6, 5, 4])
+np.partition(x, 3) # 返回x第3小的数值，两个分隔区内的数值都是任意排列的
+
+# 利用argsort寻找最邻近
+X = np.random.rand(10, 2)
+plt.scatter(X[:, 0], X[:, 1])
+dist_sq = np.sum((X[:, np.newaxis, :] - X[np.newaxis, :, :])**2, axis=-1)
+
+# 结构化数组
+data = np.zeros(4, dtype={'names':('name', 'age', 'weight'),
+                          'formats':('U10', 'i4', 'f8')})
+name = ['Alice', 'Bob', 'Cathy', 'Doug']
+age = [25, 45, 37, 19]
+weight = [55.0, 85.5, 68.0, 61.5]
+data['name'] = name
+data['age'] = age
+data['weight'] = weight
+print('data type is', data.dtype)
+print('data is', data)
+
+
+# %% pandas
