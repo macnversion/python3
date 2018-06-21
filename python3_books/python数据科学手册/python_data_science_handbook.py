@@ -159,3 +159,11 @@ print('data is', data)
 
 
 # %% pandas
+area = pd.Series({'Alaska':1723337, 'Texas':695662,'California':423967}, name='area')
+population = pd.Series({'California':38332521, 'Texas':26448193, 'New York': 19651127}, name='population')
+data = pd.DataFrame({'area':area, 'population':population})
+data['density'] = data['population']/data['area']
+data.iloc[:3, :2] # 使用iloc的隐式索引
+data.loc[:'New York', :'population'] # 使用loc的显式索引
+#data.ix[:3, :'population'] # ix混合索引，ix同样存在容易混淆的问题, .ix is deprecated
+data.loc[data.density > 90, ['population', 'density']]
