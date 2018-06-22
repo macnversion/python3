@@ -167,3 +167,11 @@ data.iloc[:3, :2] # 使用iloc的隐式索引
 data.loc[:'New York', :'population'] # 使用loc的显式索引
 #data.ix[:3, :'population'] # ix混合索引，ix同样存在容易混淆的问题, .ix is deprecated
 data.loc[data.density > 90, ['population', 'density']]
+
+# 缺失值
+df = pd.DataFrame([[1, np.nan, 2],
+                   [2, 3, 5],
+                   [np.nan, 4, 6]],
+    columns = list('ABC'))
+df.dropna(axis=0) # axis=0, 输出的结果保留完整的列标签, dropna默认保留列标签
+df.dropna(axis=1) # axis=1, 输出的结果保留完整的行表钱
