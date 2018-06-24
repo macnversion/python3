@@ -175,3 +175,64 @@ df = pd.DataFrame([[1, np.nan, 2],
     columns = list('ABC'))
 df.dropna(axis=0) # axis=0, 输出的结果保留完整的列标签, dropna默认保留列标签
 df.dropna(axis=1) # axis=1, 输出的结果保留完整的行表钱
+
+df.fillna(method='ffill', axis=1)
+
+
+# 层次索引
+index1 = [('California', 2000), ('California', 2010),
+         ('New York', 2000), ('New York', 2010),
+         ('Texas', 2000), ('Texas', 2010)]
+populations = [33871648, 37253956,
+               18976457, 19378102,
+               20851820, 25145561]
+pop = pd.Series(populations, index=index1) # 使用tuple建立的索引应用起来不方便
+
+index_mul = pd.MultiIndex.from_tuples(index1)
+pop = pop.reindex(index_mul)
+pop.index.names = ['state', 'year']
+
+pop_df = pop.unstack()
+pop_df.stack()
+
+index2 = pd.MultiIndex.from_product([[2013, 2014], [1, 2]],
+                                   names = ['year', 'visit'])
+columns = pd.MultiIndex.from_product([['Bob', 'Guido', 'Sue'], ['HR', 'Temp']],
+                                     names = ['subject', 'type'])
+data = np.round(np.random.randn(4, 6), 1)
+data[:, ::2] *= 10
+data += 37
+health_data = pd.DataFrame(data, index=index2, columns=columns)
+
+'''
+前面的例子中使用的MultiIndex都是按照字典顺序已经完成了排列的。
+对于不是使用字典顺序排列的index，切片索引会出错。
+'''
+index3 = pd.MultiIndex.from_product([['a', 'c', 'b'], [1, 2]])
+data = pd.Series(np.random.randn(len(index3)), index=index3)
+try:
+    data['a':'b']
+except KeyError as e:
+    print(type(e))
+    print(e)
+
+data = data.sort_index()
+
+'''索引的设置和重置'''
+pop_flat = pop.reset_index(name='population')
+pop_flat.set_index(['state', 'year'])
+
+
+'''多级索引的数据累计方法'''
+health_data_mean = health_data.mean(level='year')
+health_data.mean(axis=0, level='visit')
+
+'''数据集的合并操作'''
+def make_df(cols, ind): # 构建一个简单的dtaFrame
+    data = {c: [str(c) + str(i) for i in ind] for c in cols}
+    return DataFrame(data, index=ind)
+
+df1 = make_df('AB', [1,2])
+df2 = make_df('AB', [3,4])
+pd.concat([df1, df2])
+pd.concat([df1, df2], axis=1)
