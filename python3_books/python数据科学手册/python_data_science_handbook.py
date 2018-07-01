@@ -11,8 +11,11 @@ import seaborn
 
 # %% 设置工作路径
 win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
+mac_path = r'/Users/machuan/CodeSpace/Python/python3'
 if 'Windows' in platform.platform():
     data_path = win_path
+else:
+    data_path = mac_path
 
 # %% 计算代码的执行时间
 # %timeit L = [n ** 2 for n in range(100)]
@@ -173,6 +176,11 @@ df = pd.DataFrame([[1, np.nan, 2],
                    [2, 3, 5],
                    [np.nan, 4, 6]],
     columns = list('ABC'))
+
+'''
+axis=0, 输出的结果保留完整的列标签
+axis=1，输出的结果保留完整的行标签
+'''
 df.dropna(axis=0) # axis=0, 输出的结果保留完整的列标签, dropna默认保留列标签
 df.dropna(axis=1) # axis=1, 输出的结果保留完整的行表钱
 
@@ -236,3 +244,56 @@ df1 = make_df('AB', [1,2])
 df2 = make_df('AB', [3,4])
 pd.concat([df1, df2])
 pd.concat([df1, df2], axis=1)
+
+'''捕捉索引重复的错误'''
+df2.index = df1.index
+try:
+    pd.concat([df1, df2], verify_integrity=True)
+except ValueError as e:
+    print('ValueError:', e)
+
+'''忽略索引'''
+pd.concat([df1, df2], ignore_index=True)
+
+'''增加多级索引,也可以处理索引重复的问题'''
+pd.concat([df1, df2], keys=['x', 'y'])
+
+df5 = make_df('ABC', [1, 2])
+df6 = make_df('BCD', [3, 4])
+pd.concat([df5, df6], join='inner')
+
+'''合并数据集'''
+df1 = DataFrame({'employee': ['Bob', 'Jake', 'Lisa', 'Sue'],
+                 'group': ['Accounting', 'Engineering', 'Engineering', 'HR']})
+df2 = DataFrame({'name': ['Lisa', 'Bob', 'Jake', 'Sue'],
+                 'hire_date': [2004, 2008, 2012, 2014]})
+df3 = pd.merge(df1, df2, left_on='employee', right_on='name')
+df4 = DataFrame({'group': ['Accounting', 'Engineering', 'HR'],
+                 'supervisor': ['Carly', 'Guido', 'Steve']})
+pd.merge(df3, df4)
+df5 = DataFrame({'group': ['Accounting', 'Accounting', 'Engineering', 'Engineering', 'HR', 'HR'],
+                 'skills': ['math', 'spreadsheets', 'coding', 'linux', 'spreadsheets', 'organization']})
+pd.merge(df1, df5)
+
+print('\ndf1=\n', df1, '\n\ndf2=\n', df2, '\ndf3=\n', df3, '\ndf4=\n', df4, '\ndf5=\n', df5)
+'''删除多余的列'''
+pd.merge(df1, df2, left_on='employee', right_on='name').drop('name', axis=1)
+'''索引的合并'''
+df1a = df1.set_index('employee')
+df2a = df2.set_index('name')
+pd.merge(df1a, df2a, left_index=True, right_index=True)
+
+'''数据合并的集合操作规则'''
+df6 = DataFrame({'name': ['Peter', 'Paul', 'Mary'],
+                 'food': ['fish', 'beans', 'bread']}, columns=['name', 'food'])
+df7 = DataFrame({'name': ['Mary', 'Joseph'],
+                 'drink': ['wine', 'beer']}, columns=['name', 'drink'])
+pd.merge(df6, df7, how='inner')
+# %% 示例：美国各州的统计数据
+pop = pd.read_csv('./dataset/python数据科学手册/state-population.csv')
+areas = pd.read_csv('./dataset/python数据科学手册/state-areas.csv')
+abbrevs = pd.read_csv('./dataset/python数据科学手册/state-abbrevs.csv')
+merged = pd.merge(pop, abbrevs, how='outer', left_on='state/region', right_on='abbreviation')
+merged = merged.drop('abbreviation', axis=1)
+print('head of merged is:\n', merged.head())
+
