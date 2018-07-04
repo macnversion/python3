@@ -296,4 +296,18 @@ abbrevs = pd.read_csv('./dataset/python数据科学手册/state-abbrevs.csv')
 merged = pd.merge(pop, abbrevs, how='outer', left_on='state/region', right_on='abbreviation')
 merged = merged.drop('abbreviation', axis=1)
 print('head of merged is:\n', merged.head())
-
+merged.isnull().any() # 检查列数据是否存在缺失值
+merged[merged['population'].isnull()].head()
+merged.loc[merged['state'].isnull(), 'state/region'].unique()
+merged.loc[merged['state/region']=='PR', 'state'] = 'Puerto Rico'
+merged.loc[merged['state/region']=='USA', 'state'] = 'United States'
+merged.isnull().any()
+final = pd.merge(merged, areas, on='state', how='left')
+print('\nhead of final merged data is:\n', final.head())
+final.isnull().any() # 面积的数据也存在缺失的
+final.loc[final['area (sq. mi)'].isnull(), 'state'].unique()
+final.loc[final['state']=='United States', 'area (sq. mi)'] = areas['area (sq. mi)'].sum()
+data2010 = final.query('year==2010 & ages=="total"')
+data2010.set_index(['state'], inplace=True)
+density = data2010['population']/data2010['area (sq. mi)']
+density.sort_values(ascending=False, inplace=True)
