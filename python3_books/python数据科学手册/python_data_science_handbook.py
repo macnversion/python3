@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame, Series
 import matplotlib.pyplot as plt
-import seaborn
+import seaborn as sns
 
 # %% 设置工作路径
 win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
@@ -311,3 +311,7 @@ data2010 = final.query('year==2010 & ages=="total"')
 data2010.set_index(['state'], inplace=True)
 density = data2010['population']/data2010['area (sq. mi)']
 density.sort_values(ascending=False, inplace=True)
+# %% 数据的累计与分组, split-apply-combine
+planets = sns.load_dataset('planets')
+planets.isnull().any() # 检查数据是否存在缺失
+planets.dropna().describe()
