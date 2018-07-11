@@ -8,6 +8,7 @@ import pandas as pd
 from pandas import DataFrame, Series
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 # %% 设置工作路径
 win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
@@ -315,3 +316,60 @@ density.sort_values(ascending=False, inplace=True)
 planets = sns.load_dataset('planets')
 planets.isnull().any() # 检查数据是否存在缺失
 planets.dropna().describe()
+for (method, group) in planets.groupby('method'):
+    print('{0:30s} shape={1}'.format(method, group.shape))
+
+planets.groupby('method').aggregate(['min', np.median, max])
+planets.groupby('method').aggregate({'mass':max, 'year':min})
+
+rng = np.random.RandomState(0)
+df = pd.DataFrame({'key': ['A', 'B', 'C', 'A', 'B', 'C'],
+                   'data1': range(6),
+                   'data2': rng.randint(0, 10, 6)},
+    columns=['key', 'data1', 'data2'])
+
+
+def filter_func(x):
+    return x['data2'].std() > 4
+
+
+df.groupby('key').filter(filter_func)
+df.groupby('key').transform(lambda x: x - x.mean())
+L = [0, 1, 0, 1, 2, 0]
+df.groupby(L).sum()
+df2 = df.set_index('key')
+mapping = {'A':'vowel', 'B':'consonant', 'C':'consonant'}
+df2.groupby(mapping).sum() # 将索引映射到分组名称
+df2.groupby(str.lower).mean() # 将索引映射到任意的python函数
+df2.groupby([str.lower, mapping]).mean()
+
+decade = 10*(planets['year']//10)
+decade = decade.astype(str) + 's'
+decade.name = decade
+planets.groupby(['method', decade])['number'].sum().unstack().fillna(0)
+
+# %% 数据透视表
+titanic = sns.load_dataset('titanic')
+titanic.groupby(['sex', 'class'])['survived'].mean().unstack() # 使用groupby函数生成分析数据
+titanic.pivot_table('survived', index='sex', columns='class', aggfunc='mean')
+age = pd.cut(titanic['age'], [0, 18, 80])
+titanic.pivot_table('survived', index=['sex', age], columns='class', aggfunc='mean')
+fare = pd.qcut(titanic['fare'], 2)
+titanic.pivot_table('survived', index=['sex', age], columns=['class', fare], aggfunc='mean')
+
+births = pd.read_csv('./dataset/python数据科学手册/births.csv')
+births['decade'] = 10*(births['year']//10)
+births.pivot_table('births', index='decade', columns='gender', aggfunc='sum')
+sns.set() # 使用seaborn风格
+births.pivot_table('births', index='year', columns='gender', aggfunc='sum').plot()
+
+# %% 向量化字符串操作
+try:
+    recipes = pd.read_json('./dataset/python数据科学手册/recipeitems-latest.json')
+except ValueError as e:
+    print('ValueError:', e)
+
+'''
+检查github上的数据的获取链接
+'''
+# %% 时间序列
