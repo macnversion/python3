@@ -6,9 +6,12 @@ import platform
 import numpy as np
 import pandas as pd
 from pandas import DataFrame, Series
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.pyplot as plt
+from datetime import datetime
+from pandas_datareader import data
 
 # %% 设置工作路径
 win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
@@ -373,3 +376,9 @@ except ValueError as e:
 检查github上的数据的获取链接
 '''
 # %% 时间序列
+
+# %% matplotlib
+x = np.linspace(0, 10, 100)
+fig, ax = plt.subplots(2)
+ax[0].plot(x, np.sin(x))
+ax[1].plot(x, np.cos(x))
