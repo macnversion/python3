@@ -12,7 +12,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pandas_datareader import data
-
+import rpy2.robjects as robjects
+from rpy2.robjects.packages import importr
+# %%
+base = importr('base')
+tidyverse = importr('tidyverse')
 # %% 设置工作路径
 win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
 mac_path = r'/Users/machuan/CodeSpace/Python/python3'
@@ -118,7 +122,7 @@ X_centered = X - X_mean
 # 布尔掩码
 rainfall = pd.read_csv('./dataset/python数据科学手册/Seattle2014.csv')['PRCP'].values
 inches = rainfall/254
-seaborn.set()
+sns.set()
 plt.hist(inches, 40)
 rainy = (inches > 0)
 
@@ -377,8 +381,35 @@ except ValueError as e:
 '''
 # %% 时间序列
 
-# %% matplotlib
-x = np.linspace(0, 10, 100)
-fig, ax = plt.subplots(2)
-ax[0].plot(x, np.sin(x))
-ax[1].plot(x, np.cos(x))
+# %% matplotlib 
+x = np.linspace(0, 10000, 100)
+fig = plt.figure()
+ax = plt.axes()
+'''使用ax.set一次设置所有的属性'''
+ax.set(xlim=(0, 10000), ylim=(-2, 2),
+       xlabel='x', ylabel='sin(x) and cos(x)')
+plt.plot(x, np.sin(x), '-r', label='sin(x)')
+plt.plot(x, np.cos(x), '--g', label='cos(x)')
+plt.title('a sin and cos curve')
+plt.legend()
+# %%
+fig2 =plt.figure()
+ax = plt.axes()
+rng = np.random.RandomState(0)
+for marker in ['o','.', ',', 'x', '+', '^', '<', '>', 's', 'd']:
+    plt.plot(rng.rand(5), rng.rand(5), marker, label="maker='{0}'".format(marker))
+plt.lengend(numpoints=1)
+
+# %%
+from sklearn.datasets import load_iris
+iris = load_iris()
+features = iris.data.T
+
+plt.scatter(features[0], features[1], alpha=0.2, s=100*features[3], c=iris.target, cmap='viridis')
+plt.xlabel(iris.feature_names[0])
+plt.ylabel(iris.feature_names[1])
+# %%
+x = np.linspace(0, 10, 50)
+dy = 0.8
+y = np.sin(x) + dy*np.random.randn(50)
+plt.errorbar(x, y, yerr=dy, fmt='.r')
