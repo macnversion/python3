@@ -28,3 +28,6 @@ irisdata[irisdata['petal_length']==irisdata.petal_length.max()]
 
 # %% series
 series1 = pd.Series(np.random.randn(4))
+
+
+# %% 测试python语法的语句
