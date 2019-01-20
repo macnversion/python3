@@ -31,3 +31,19 @@ series1 = pd.Series(np.random.randn(4))
 
 
 # %% 测试python语法的语句
+class Cars():
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+        self.odometer_reading = 0
+
+    def get_descriptive_name(self):
+        pass
+
+    def read_odometer(self):
+        print("This car has " + str(self.odometer_reading) + " miles on it.")
+
+    def update_odometer(self, mileage):
+        self.odometer_reading = mileage
+
