@@ -7,6 +7,7 @@ import scipy as sp
 import pandas as pd
 import datetime
 import json
+import datetime
 
 # %% 数据集
 r = requests.get('http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data')
@@ -28,6 +29,19 @@ irisdata[irisdata['petal_length']==irisdata.petal_length.max()]
 
 # %% series
 series1 = pd.Series(np.random.randn(4))
+
+# %% index
+multi1 = pd.Index([('Row_' + str(x+1), 'Col_' + str(y+1)) for x in range(4) for y in range(4)])
+multi1.name = ['index1', 'index2']
+
+data_for_multi1 = pd.Series(range(16), index=multi1) # 多重索引的数据变形
+data_for_multi1.unstack()
+
+period_index1 = pd.period_range('2018-01', '2018-12', freq='M')
+period_index2 = period_index1.asfreq('D', how='start')
+period_index3 = period_index1.asfreq('D', how='end')
+
+period_index_mon = pd.period_range('2018-01', '2018-03', freq='M').asfreq('D', how='start')
 
 
 # %% 测试python语法的语句
