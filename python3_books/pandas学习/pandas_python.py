@@ -42,6 +42,8 @@ period_index2 = period_index1.asfreq('D', how='start')
 period_index3 = period_index1.asfreq('D', how='end')
 
 period_index_mon = pd.period_range('2018-01', '2018-03', freq='M').asfreq('D', how='start')
+period_index_day = pd.period_range('2018-01-01', '2018-03-31', freq='D')
+full_ts = pd.Series(period_index_mon, index=period_index_mon).reindex(period_index_day, method='ffill')
 
 
 # %% 测试python语法的语句
