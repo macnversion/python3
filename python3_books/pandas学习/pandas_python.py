@@ -46,6 +46,42 @@ period_index_day = pd.period_range('2018-01-01', '2018-03-31', freq='D')
 full_ts = pd.Series(period_index_mon, index=period_index_mon).reindex(period_index_day, method='ffill')
 
 
+index1 = pd.Index(['a', 'b', 'c', 'd', 'e'])
+index2 = pd.Index(['c', 'd', 'e', 'f', 'g'])
+index1.append(index2)
+index1.difference(index2)
+index1.intersection(index2)
+index1.union(index2)
+index1.isin(index2)
+
+# pandas的IO
+irisdata = pd.read_csv('SIEP3_iris.txt', header=None, names=cnames)
+irisdata.to_excel('s1ep3_iris.xls', index=None, encoding='utf-8')
+irisdata_from_excel = pd.read_excel('s1ep3_iris.xls', header=0, encoding='utf-8')
+
+json_data = [{'name':'tony', 'job':'ceo', 'salary':100000},
+             {'name':'celine', 'job':'cmo', 'salary':5000000},
+             {'name':'lily', 'job':'cco', 'salary':200000}]
+data_employee = pd.read_json(json.dumps(json_data))
+data_employee_ri = data_employee.reindex(columns=['name', 'job', 'salary'])
+
+pd.concat([data_employee_ri, data_employee_ri])
+pd.merge(data_employee_ri, data_employee_ri, on='name')
+pd.merge(data_employee_ri, data_employee_ri, on=['name', 'job'])
+
+data_employee_ri.index.name = 'index1'
+pd.merge(data_employee_ri, data_employee_ri, left_index=True, right_index=True)
+
+data_employee_ri['title'] = data_employee_ri['job'].map(str.upper)
+data_employee_ri
+
+# %% groupby
+irisdata_group = irisdata.groupby('class')
+for level, subsetDF in irisdata_group:
+    print(level)
+    print(subsetDF)
+
+
 # %% 测试python语法的语句
 class Cars():
     def __init__(self, make, model, year):
