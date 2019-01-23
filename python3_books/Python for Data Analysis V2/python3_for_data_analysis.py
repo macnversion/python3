@@ -5,6 +5,7 @@ import pandas as pd
 from pandas import DataFrame, Series
 import os
 import platform
+import json
 from datetime import datetime, date, time
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -13,6 +14,7 @@ import requests
 import re
 import seaborn
 from dateutil.parser import parse
+
 # %% dataset路径
 '''
 value = true-expr if condition else false-expr
@@ -217,3 +219,8 @@ party_counts = pd.crosstab(tips['day'], tips['size'])
 party_counts = party_counts.loc[:, 2:5]
 party_pcts = party_counts.div(party_counts.sum(1), axis=0)
 
+
+# %% usagov数据的应用
+data_path = r'./dataset/bitly_usagov/example.txt'
+with open(data_path) as f:
+    path_data = f.readlines()
