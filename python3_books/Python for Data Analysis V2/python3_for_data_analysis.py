@@ -14,6 +14,7 @@ import requests
 import re
 import seaborn
 from dateutil.parser import parse
+from collections import defaultdict
 
 # %% dataset路径
 '''
@@ -223,4 +224,36 @@ party_pcts = party_counts.div(party_counts.sum(1), axis=0)
 # %% usagov数据的应用
 data_path = r'./dataset/bitly_usagov/example.txt'
 with open(data_path) as f:
-    path_data = f.readlines()
+    data = f.readlines()
+
+records1 = [json.loads(line) for line in open(data_path)]
+records = [json.loads(line) for line in data]
+
+time_zones = [rec['tz'] for rec in records if 'tz' in rec]
+
+
+def get_counts(sequence):
+    counts = {}
+    for x in sequence:
+        if x in counts:
+            counts[x] += 1
+        else:
+            counts[x] = 1
+    return counts
+
+
+def get_counts2(sequence):
+    counts = defaultdict(int) # 所有的值均会初始化为0
+    for x in sequence:
+        counts[x] += 1
+    return counts
+
+
+counts = get_counts(time_zones)
+
+
+def top_counts(counts_dict, n=10):
+    value_key_pairs = [(count, tz) for tz, count in counts_dict.items()]
+    value_key_pairs.sort()
+    return value_key_pairs[-n:]
+
