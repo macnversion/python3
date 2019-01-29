@@ -15,16 +15,17 @@ import re
 import seaborn
 from dateutil.parser import parse
 from collections import defaultdict
+from collections import Counter
 
 # %% dataset路径
 '''
 value = true-expr if condition else false-expr
 '''
 
-mac_path = r'/Users/machuan/CodeSpace/Python/python3'
-win_path = r''
-workpath = win_path if 'windows' in platform.platform else mac_path
-os.chdir(workpath)
+#mac_path = r'/Users/machuan/CodeSpace/Python/python3'
+#win_path = r''
+#workpath = win_path if 'windows' in platform.platform else mac_path
+#os.chdir(workpath)
 
 # %% 基本数据结构
 # 取出元组
@@ -231,7 +232,7 @@ records = [json.loads(line) for line in data]
 
 time_zones = [rec['tz'] for rec in records if 'tz' in rec]
 
-
+# 使用python对时区进行计数
 def get_counts(sequence):
     counts = {}
     for x in sequence:
@@ -257,3 +258,12 @@ def top_counts(counts_dict, n=10):
     value_key_pairs.sort()
     return value_key_pairs[-n:]
 
+counts = Counter(time_zones)
+counts.most_common(10)
+
+
+# 使用pandas对时区进行计数
+df_records = DataFrame(records)
+tz_counts = df_records['tz'].value_counts()
+clean_tz = df_records['tz'].fillna('Missing')
+clean_tz[clean_tz == ''] = 'Unknown'
