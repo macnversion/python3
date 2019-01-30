@@ -267,3 +267,8 @@ df_records = DataFrame(records)
 tz_counts = df_records['tz'].value_counts()
 clean_tz = df_records['tz'].fillna('Missing')
 clean_tz[clean_tz == ''] = 'Unknown'
+
+results = Series([x.split()[0] for x in df_records.a.dropna()])
+
+clean_df_records = df_records[df_records.a.notnull()]
+operation_system = np.where(clean_df_records['a'].str.contains('windows'), 'Windows', 'Not Windosw')
