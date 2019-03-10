@@ -11,19 +11,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
-from pandas_datareader import data
-import rpy2.robjects as robjects
-from rpy2.robjects.packages import importr
+
 # %%
 base = importr('base')
 tidyverse = importr('tidyverse')
-# %% 设置工作路径
-win_path = r'D:/WorkSpace/CodeSpace/Python/Python3'
-mac_path = r'/Users/machuan/CodeSpace/Python/python3'
-if 'Windows' in platform.platform():
-    data_path = win_path
-else:
-    data_path = mac_path
 
 # %% 计算代码的执行时间
 # %timeit L = [n ** 2 for n in range(100)]
@@ -100,10 +91,11 @@ def compute_reciprocals(values):
         out[i] = 1.0/values[i]
     return out
 
+
 values = np.random.randint(1, 10, size=5)
 compute_reciprocals(values)
-#big_array = np.random.randint(1, 100, size=1000000)
-#timeit compute_reciprocals(big_array) # run this in console
+# big_array = np.random.randint(1, 100, size=1000000)
+# timeit compute_reciprocals(big_array) # run this in console
 
 # 通用函数的高级特性
 x = np.arange(5)
@@ -147,6 +139,7 @@ def selection_sort(x): # 选择排序
         swap = i + np.argmin(x[i:])
         (x[i], x[swap]) = (x[swap], x[i])
     return x
+
 
 x = np.array([7, 2, 3, 1, 6, 5, 4])
 np.partition(x, 3) # 返回x第3小的数值，两个分隔区内的数值都是任意排列的
