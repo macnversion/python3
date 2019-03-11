@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # %%
-base = importr('base')
-tidyverse = importr('tidyverse')
+#base = importr('base')
+#tidyverse = importr('tidyverse')
 
 # %% 计算代码的执行时间
 # %timeit L = [n ** 2 for n in range(100)]
@@ -95,12 +95,21 @@ def compute_reciprocals(values):
 values = np.random.randint(1, 10, size=5)
 compute_reciprocals(values)
 # big_array = np.random.randint(1, 100, size=1000000)
-# timeit compute_reciprocals(big_array) # run this in console
+# %timeit compute_reciprocals(big_array) # run this in console
 
 # 通用函数的高级特性
 x = np.arange(5)
 y = np.empty(5)
 np.multiply(x, 10, out=y) # out参数指定输出的位置
+
+
+# 计算美国总统的身高
+data = pd.read_csv('./dataset/python数据科学手册/president_heights.csv')
+heights = np.array(data['height(cm)'])
+print('mean height:', heights.mean())
+print('standard deviation:', heights.std())
+print('min height:', heights.min())
+plt.hist(heights)
 
 # 聚合
 M = np.random.random((3,4))
