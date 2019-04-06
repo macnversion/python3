@@ -21,7 +21,7 @@ from datetime import datetime
 
 # %% numpy
 # numpy中的可以直接应用的数组
-np.zeros(10 ,dtype=int) # 创建长度为10的零数组
+np.zeros(10, dtype=int) # 创建长度为10的零数组
 np.ones((3, 5), dtype=float) # 创建3✖*5的浮点数组
 np.full((3, 5), 3.14) # 创建3*5的浮点数组，数值全部都是3.14
 np.arange(0, 20, 2) # 0开始，20结束，步长为2
@@ -112,7 +112,7 @@ print('min height:', heights.min())
 plt.hist(heights)
 
 # 聚合
-M = np.random.random((3,4))
+M = np.random.random((3, 4))
 M.min(axis=0)
 
 # 广播
@@ -121,7 +121,8 @@ X_mean = X.mean(axis=0)
 X_centered = X - X_mean
 
 # 布尔掩码
-rainfall = pd.read_csv('./dataset/python数据科学手册/Seattle2014.csv')['PRCP'].values
+rainfall_full_data = pd.read_csv('./dataset/python数据科学手册/Seattle2014.csv')
+rainfall = rainfall_full_data['PRCP'].values
 inches = rainfall/254
 sns.set()
 plt.hist(inches, 40)
@@ -129,9 +130,11 @@ rainy = (inches > 0)
 
 # 花式索引
 rand = np.random.RandomState(42)
-x = np.random.randint(100, size=10)
-ind = np.array([[3, 7],
-                [4, 5]])
+x = np.arange(12).reshape((3, 4))
+row = np.array([0, 1, 2])
+col = np.array([2, 1, 3])
+x[row[:, np.newaxis], col]
+
     
 # 数组区间的划分
 np.random.seed(42)
