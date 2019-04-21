@@ -1,4 +1,8 @@
 .spyproject
+.DS_Store
+dataset/.DS_Store
+python3_books/.DS_Store
+.gitignore.swp
 .idea
 .idea/*
 ./.idea/
