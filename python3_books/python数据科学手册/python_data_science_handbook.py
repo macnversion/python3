@@ -229,6 +229,13 @@ data[:, ::2] *= 10
 data += 37
 health_data = pd.DataFrame(data, index=index2, columns=columns)
 
+index3 = [('California', 2000, 'rich'), ('California', 2010, 'rich'),
+         ('New York', 2000, 'poor'), ('New York', 2010, 'poor'),
+         ('Texas', 2000, 'poor'), ('Texas', 2010, 'poor')]
+index_mul2 = pd.MultiIndex.from_tuples(index3)
+pop2 = pd.Series(populations, index=index_mul2)
+pop2.index.names = ['state', 'year', 'living']
+
 '''
 前面的例子中使用的MultiIndex都是按照字典顺序已经完成了排列的。
 对于不是使用字典顺序排列的index，切片索引会出错。
@@ -247,10 +254,13 @@ data = data.sort_index()
 pop_flat = pop.reset_index(name='population')
 pop_flat.set_index(['state', 'year'])
 
+pop2_flat = pop2.reset_index(name='population')
+pop2_flat.set_index(['year', 'state'])
 
 '''多级索引的数据累计方法'''
 health_data_mean = health_data.mean(level='year')
 health_data.mean(axis=0, level='visit')
+health_data.mean(level=1, axis=1)
 
 '''数据集的合并操作'''
 def make_df(cols, ind): # 构建一个简单的dtaFrame
