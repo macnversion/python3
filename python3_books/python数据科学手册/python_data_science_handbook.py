@@ -288,6 +288,7 @@ pd.concat([df1, df2], keys=['x', 'y'])
 df5 = make_df('ABC', [1, 2])
 df6 = make_df('BCD', [3, 4])
 pd.concat([df5, df6], join='inner')
+pd.concat([df5, df6], join_axes=[df5.columns])
 
 '''合并数据集'''
 df1 = DataFrame({'employee': ['Bob', 'Jake', 'Lisa', 'Sue'],
@@ -322,6 +323,7 @@ areas = pd.read_csv('./dataset/python数据科学手册/state-areas.csv')
 abbrevs = pd.read_csv('./dataset/python数据科学手册/state-abbrevs.csv')
 merged = pd.merge(pop, abbrevs, how='outer', left_on='state/region', right_on='abbreviation')
 merged = merged.drop('abbreviation', axis=1)
+print('merged.columns=\n', merged.columns)
 print('head of merged is:\n', merged.head())
 merged.isnull().any() # 检查列数据是否存在缺失值
 merged[merged['population'].isnull()].head()
@@ -333,17 +335,25 @@ final = pd.merge(merged, areas, on='state', how='left')
 print('\nhead of final merged data is:\n', final.head())
 final.isnull().any() # 面积的数据也存在缺失的
 final.loc[final['area (sq. mi)'].isnull(), 'state'].unique()
+final.dropna(inplace=True)
 final.loc[final['state']=='United States', 'area (sq. mi)'] = areas['area (sq. mi)'].sum()
 data2010 = final.query('year==2010 & ages=="total"')
 data2010.set_index(['state'], inplace=True)
 density = data2010['population']/data2010['area (sq. mi)']
 density.sort_values(ascending=False, inplace=True)
+
 # %% 数据的累计与分组, split-apply-combine
 planets = sns.load_dataset('planets')
 planets.isnull().any() # 检查数据是否存在缺失
 planets.dropna().describe()
+print(planets.columns)
+
+planets.groupby('method')['method'].count()
 for (method, group) in planets.groupby('method'):
     print('{0:30s} shape={1}'.format(method, group.shape))
+
+
+planets.groupby('method')['year'].describe().unstack()
 
 planets.groupby('method').aggregate(['min', np.median, max])
 planets.groupby('method').aggregate({'mass':max, 'year':min})
@@ -353,14 +363,22 @@ df = pd.DataFrame({'key': ['A', 'B', 'C', 'A', 'B', 'C'],
                    'data1': range(6),
                    'data2': rng.randint(0, 10, 6)},
     columns=['key', 'data1', 'data2'])
-
+print(df)
+df.groupby('key').aggregate(['min', np.median, max])
+df.groupby('key').aggregate({'data1':min, 'data2':max})
 
 def filter_func(x):
     return x['data2'].std() > 4
 
 
 df.groupby('key').filter(filter_func)
+'''
+过滤操作返回对是原数据的子集
+'''
 df.groupby('key').transform(lambda x: x - x.mean())
+'''
+转换操作返回的是原数据形状相同的数据集
+'''
 L = [0, 1, 0, 1, 2, 0]
 df.groupby(L).sum()
 df2 = df.set_index('key')
@@ -376,7 +394,11 @@ planets.groupby(['method', decade])['number'].sum().unstack().fillna(0)
 
 # %% 数据透视表
 titanic = sns.load_dataset('titanic')
-titanic.groupby(['sex', 'class'])['survived'].mean().unstack() # 使用groupby函数生成分析数据
+print(titanic.columns)
+titanic.head()
+titanic.groupby(['sex'])['survived'].mean()
+titanic.groupby(['sex', 'class'])['survived'].mean().unstack(level=1)  # 使用groupby函数生成分析数据
+
 titanic.pivot_table('survived', index='sex', columns='class', aggfunc='mean')
 age = pd.cut(titanic['age'], [0, 18, 80])
 titanic.pivot_table('survived', index=['sex', age], columns='class', aggfunc='mean')
