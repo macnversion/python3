@@ -406,11 +406,19 @@ fare = pd.qcut(titanic['fare'], 2)
 titanic.pivot_table('survived', index=['sex', age], columns=['class', fare], aggfunc='mean')
 
 births = pd.read_csv('./dataset/python数据科学手册/births.csv')
+print(births.columns)
+print(births.head())
 births['decade'] = 10*(births['year']//10)
-births.pivot_table('births', index='decade', columns='gender', aggfunc='sum')
+births_by_decade = births.pivot_table('births', index='decade', columns='gender', aggfunc='sum')
+births_by_decade['total'] = births_by_decade.sum(axis=1)
+births_by_decade['F_rate'] = births_by_decade['F']/births_by_decade['total']
+births_by_decade['M_rate'] = births_by_decade['M']/births_by_decade['total']
+print(births_by_decade)
 sns.set() # 使用seaborn风格
 births.pivot_table('births', index='year', columns='gender', aggfunc='sum').plot()
+births_by_decade.loc[:, ['F_rate', 'M_rate']].plot()
 
+quartiles = np.percentile(births['births'], [25, 50, 75])
 # %% 向量化字符串操作
 try:
     recipes = pd.read_json('./dataset/python数据科学手册/recipeitems-latest.json')
@@ -419,10 +427,12 @@ except ValueError as e:
 
 '''
 检查github上的数据的获取链接
+pity
 '''
 # %% 时间序列
 
 # %% matplotlib 
+plt.style.use('classic')
 x = np.linspace(0, 10000, 100)
 fig = plt.figure()
 ax = plt.axes()
@@ -434,12 +444,12 @@ plt.plot(x, np.cos(x), '--g', label='cos(x)')
 plt.title('a sin and cos curve')
 plt.legend()
 # %%
-fig2 =plt.figure()
+plt.style.use('seaborn-whitegrid')
+fig = plt.figure()
 ax = plt.axes()
-rng = np.random.RandomState(0)
-for marker in ['o','.', ',', 'x', '+', '^', '<', '>', 's', 'd']:
-    plt.plot(rng.rand(5), rng.rand(5), marker, label="maker='{0}'".format(marker))
-plt.lengend(numpoints=1)
+x = np.linspace(0, 10, 100)
+ax.plot(x, np.sin(x))
+ax.plot(x, np.cos(x))
 
 # %%
 from sklearn.datasets import load_iris
