@@ -2,56 +2,79 @@
 
 # %%
 import os
+import numpy as np
+import scipy as sp
 import pandas as pd
 import scipy as sp
 from scipy.interpolate import lagrange
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+
+# %% 基本的几个包的应用
+# scipy求解方程组
+from scipy.optimize import fsolve
+def f(x):
+    x1 = x[0]
+    x2 = x[1]
+    return [2*x1 - x2**2 - 1, x1**2 - x2 -2]
+
+
+result = fsolve(f, [1, 1])
+print(result)
+
 # %% 相关参数设定
-plt.rcParams['font.sans-serif'] = ['SimHei'] # 用来正常显示中文标签
-plt.rcParams['axes.unicode_minus'] = False # 用来正常显示负号
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 # %% 文件路径
 sorted(os.listdir('./dataset/Python数据分析与挖掘实战'))
 
 # %% catering数据异常值检测
 catering_sales = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_sale.xls', index_col=u'日期')
-
+catering_sales.describe()
+# %%
 plt.figure()
 p = catering_sales.boxplot()
-#x = p['fliers'][0].get_xdata()
+#x = p['fliers'][0].get_xdata()  # 不确定语法的正确性
 #y = p['fliers'][0].get_ydata()
 #y.sort()
-
-catering_sales = catering_sales[(catering_sales[u'销量']>400)&(catering_sales[u'销量']<5000)]
-statistics = catering_sales.describe()
+plt.show()
+# %%
+catering_sales_clean = catering_sales[(catering_sales['销量']>400)&(catering_sales['销量']<5000)]
+statistics = catering_sales_clean.describe()  # 生成的statistics类型是data frame
 statistics.loc['range'] = statistics.loc['max'] - statistics.loc['min']
+statistics.loc['var'] = statistics.loc['std']/statistics.loc['mean']
+statistics.loc['dis'] = statistics.loc['75%'] - statistics.loc['25%']
+print(statistics)
 
 # %% 帕累托分析
 dish_profit = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_dish_profit.xls',
-                            index_col = u'菜品名')
-dish_profit = dish_profit[u'盈利'].copy()
-dish_profit.sort_values(ascending = False)
+                            index_col=u'菜品名')
+# %%
+dish_profit_copy = dish_profit['盈利']
+dish_profit_copy.sort_values(ascending=False)
+
 plt.figure()
-dish_profit.plot(kind='bar')
-plt.ylabel(u'盈利（元）')
-p = 1.0*dish_profit.cumsum()/dish_profit.sum()
+dish_profit_copy.plot(kind='bar')
+plt.ylabel('盈利（元）')
+p = dish_profit_copy.cumsum()/dish_profit_copy.sum()
 p.plot(color='r', secondary_y=True, style='-o', linewidth=2)
-plt.ylabel(u'盈利（占比）')
+plt.ylabel('盈利（比例）')
+plt.show()
 
 # %% 连续属性离散化
 discretization_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/discretization_data.xls')
 data = discretization_data[u'肝气郁结证型系数'].copy()
 k = 4
 
-d1 = pd.cut(data, k, labels=range(4)) # 等宽离散化
+d1 = pd.cut(data, k, labels=range(4))  # 等宽离散化
 
 w = [1.0*i/k for i in range(k+1)]
 w = data.describe(percentiles = w)[4:4+k+1]
 w[0] = w[0]*(1-1e-10)
-d2 = pd.cut(data, w, labels=range(k)) # 等频率离散化
+d2 = pd.cut(data, w, labels=range(k))  # 等频率离散化
 
 
-kmodel = KMeans(n_clusters = k, n_jobs = 4) # 建立模型，n_jobs是并行数
+kmodel = KMeans(n_clusters = k, n_jobs = 4)  # 建立模型，n_jobs是并行数
 kmodel.fit(data.values.reshape((len(data), 1)))
 c = pd.DataFrame(kmodel.cluster_centers_).sort_values(0)
 w = pd.rolling_mean(c, 2).iloc[1:]
