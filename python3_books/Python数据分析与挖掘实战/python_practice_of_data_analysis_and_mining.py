@@ -60,7 +60,8 @@ p = dish_profit_copy.cumsum()/dish_profit_copy.sum()
 p.plot(color='r', secondary_y=True, style='-o', linewidth=2)
 plt.ylabel('盈利（比例）')
 plt.show()
-
+# %% 相关性分析
+catering_sales = pd.read_excel()
 # %% 连续属性离散化
 discretization_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/discretization_data.xls')
 data = discretization_data[u'肝气郁结证型系数'].copy()
