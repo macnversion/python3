@@ -74,8 +74,6 @@ catering_sales['销量'][(catering_sales['销量'] < 400) | (catering_sales['销
 
 
 # %%
-
-
 # 自定义列向量插值函数:s为列向量，n为被插值的位置，k为前后取值的个数
 def interp_columns(s, n, k=5):
     y = s[list(range(n - k, n)) + list(range(n + 1, n + 1 + k))]
@@ -90,8 +88,8 @@ for i in catering_sales.columns:
 print(catering_sales)
 
 # %% 连续属性离散化
-discretization_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/discretization_data.xls')
-data = discretization_data[u'肝气郁结证型系数'].copy()
+dis_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/discretization_data.xls')
+data = dis_data[u'肝气郁结证型系数'].copy()
 k = 4
 
 d1 = pd.cut(data, k, labels=range(4))  # 等宽离散化
