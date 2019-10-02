@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*
 from urllib.request import urlopen
 from urllib.error import HTTPError
+from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
 import re
 import datetime
 import random
+import os
+import csv
 
 url1 = 'http://pythonscraping.com/pages/page1.html'
 url2 = 'http://www.pythonscraping.com/pages/warandpeace.html'
 url3 = 'http://pythonscraping.com/pages/page3.html'
+url4 = 'http://pythonscraping.com'
 
 def getTitle(url):
     try:
@@ -87,3 +91,71 @@ def getLinks2(pageUrl):
             print(newPage)
             pages.add(newPage)
             getLinks2(newPage)
+
+# 下载单张图片
+html = urlopen(url4)
+bsObj = BeautifulSoup(html)
+imageLocation = bsObj.find('a', {'id': 'logo'}).find('img')['src']
+urlretrieve(imageLocation, 'logo.jpg')
+
+
+downloadDirectory = 'download'
+baseUrl = 'http://pythonscraping.com'
+
+
+def get_absolute_url(baseUrl, source):
+    if source.startswith('https://www.'):
+        url = 'http://' + source[11:]
+    elif source.startswith('http://'):
+        url = source
+    elif source.startswith('www.'):
+        url = source[4:]
+        url = 'http://' + url
+    else:
+        url = baseUrl + '/' + source
+    if baseUrl not in url:
+        return None
+    return url
+
+
+def get_download_path(baseUrl, absolute_url, download_directory):
+    path = absolute_url.replace('www.', '')
+    path = path.replace(baseUrl, '')
+    path = download_directory + path
+    directory = os.path.dirname(path)
+
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+    return path
+
+
+html = urlopen(baseUrl)
+bsObj = BeautifulSoup(html)
+downloadList = bsObj.find_all(src=True)
+
+for download in downloadList:
+    fileUrl = get_absolute_url(baseUrl, download['src'])
+    if fileUrl is not None:
+        print(fileUrl)
+
+#urlretrieve(fileUrl, get_download_path(baseUrl, fileUrl, downloadDirectory))
+
+# 下载html表格并存储在csv文件中
+url5 = 'http://en.wikipedia.org/wiki/Comparison_of_text_editors'
+html = urlopen(url5)
+bsObj = BeautifulSoup(html)
+table = bsObj.find_all('table', {'class': 'wikitable'})[0]
+rows = table.find_all('tr')
+
+csvFile = open('editors.csv', 'wt', newline='', encoding='utf-8')
+writer = csv.writer(csvFile)
+try:
+    for row in rows:
+        csvRow = []
+        for cell in row.find_all(['td', 'th']):
+            csvRow.append(cell.get_text())
+            writer.writerow(csvRow)
+finally:
+    csvFile.close()
+
+
