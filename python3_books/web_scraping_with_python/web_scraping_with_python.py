@@ -14,6 +14,7 @@ url2 = 'http://www.pythonscraping.com/pages/warandpeace.html'
 url3 = 'http://pythonscraping.com/pages/page3.html'
 url4 = 'http://pythonscraping.com'
 
+
 def getTitle(url):
     try:
         html = urlopen(url)
@@ -43,7 +44,7 @@ html = urlopen(url3)
 bsObj = BeautifulSoup(html)
 for child in bsObj.find('table', {'id': 'giftList'}).children:
     pass
-    #print(child)
+    # print(child)
 
 for child in bsObj.find('table', {'id': 'giftList'}).descendants:
     pass
@@ -56,7 +57,6 @@ images = bsObj.find_all('img', {'src': re.compile('\\.\\.\\/img\\/gifts\\/img*\\
 for image in images:
     print(image)
 
-
 url4 = 'https://en.wikipedia.org/wiki/Eric_Idle'
 url5 = 'https://en.wikipedia.org/wiki/Kevin_Bacon'
 html = urlopen(url4)
@@ -65,8 +65,9 @@ for link in bsObj.find_all('a'):
     if 'href' in link.attrs:
         print(link.attrs['href'])
 
-
 random.seed(datetime.datetime.now())
+
+
 def getLinks(articleUrl):
     html = urlopen('https://en.wikipedia.org' + articleUrl)
     bsObj = BeautifulSoup(html)
@@ -74,13 +75,14 @@ def getLinks(articleUrl):
 
 
 links = getLinks('/wiki/Kevin_Bacon')
-while len(links)>0:
-    newArticle = links[random.randint(0, len(links)-1)].attrs['href']
+while len(links) > 0:
+    newArticle = links[random.randint(0, len(links) - 1)].attrs['href']
     print(newArticle)
     links = getLinks(newArticle)
 
-
 pages = set()
+
+
 def getLinks2(pageUrl):
     global pages
     html = urlopen('https://en.wikipedia.org' + pageUrl)
@@ -92,12 +94,12 @@ def getLinks2(pageUrl):
             pages.add(newPage)
             getLinks2(newPage)
 
+
 # 下载单张图片
 html = urlopen(url4)
 bsObj = BeautifulSoup(html)
 imageLocation = bsObj.find('a', {'id': 'logo'}).find('img')['src']
 urlretrieve(imageLocation, 'logo.jpg')
-
 
 downloadDirectory = 'download'
 baseUrl = 'http://pythonscraping.com'
@@ -138,7 +140,7 @@ for download in downloadList:
     if fileUrl is not None:
         print(fileUrl)
 
-#urlretrieve(fileUrl, get_download_path(baseUrl, fileUrl, downloadDirectory))
+# urlretrieve(fileUrl, get_download_path(baseUrl, fileUrl, downloadDirectory))
 
 # 下载html表格并存储在csv文件中
 url5 = 'http://en.wikipedia.org/wiki/Comparison_of_text_editors'
@@ -157,5 +159,3 @@ try:
             writer.writerow(csvRow)
 finally:
     csvFile.close()
-
-
