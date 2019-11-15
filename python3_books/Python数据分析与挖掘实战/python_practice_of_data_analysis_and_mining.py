@@ -28,7 +28,7 @@ print(result)
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 # %% 文件路径
-sorted(os.listdir('./dataset/Python数据分析与挖掘实战'))
+sorted(os.listdir('./pyton3/dataset/Python数据分析与挖掘实战'))
 
 # %% catering数据异常值检测
 catering_sales = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_sale.xls', index_col=u'日期')
@@ -49,7 +49,7 @@ statistics.loc['dis'] = statistics.loc['75%'] - statistics.loc['25%']
 print(statistics)
 
 # %% 帕累托分析
-dish_profit = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_dish_profit.xls',
+dish_profit = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/catering_dish_profit.xls',
                             index_col=u'菜品名')
 # %%
 dish_profit_copy = dish_profit['盈利']
@@ -63,7 +63,7 @@ p.plot(color='r', secondary_y=True, style='-o', linewidth=2)
 plt.ylabel('盈利（比例）')
 plt.show()
 # %% 相关性分析
-catering_sales = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_sale_all.xls', index_col='日期')
+catering_sales = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/catering_sale_all.xls', index_col='日期')
 catering_sales.corr()
 
 # %% 拉格朗日插值分析
