@@ -8,7 +8,6 @@ import pandas as pd
 import scipy as sp
 from scipy.interpolate import lagrange
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
 
 # %% 基本的几个包的应用
 # scipy求解方程组
@@ -28,10 +27,10 @@ print(result)
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 # %% 文件路径
-sorted(os.listdir('./pyton3/dataset/Python数据分析与挖掘实战'))
+sorted(os.listdir('./python3/dataset/Python数据分析与挖掘实战'))
 
 # %% catering数据异常值检测
-catering_sales = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_sale.xls', index_col=u'日期')
+catering_sales = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/catering_sale.xls', index_col=u'日期')
 catering_sales.describe()
 # %%
 plt.figure()
@@ -69,7 +68,7 @@ catering_sales.corr()
 # %% 拉格朗日插值分析
 from scipy.interpolate import lagrange
 
-catering_sales = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_sale.xls', index_col='日期')
+catering_sales = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/catering_sale.xls', index_col='日期')
 catering_sales['销量'][(catering_sales['销量'] < 400) | (catering_sales['销量'] > 5000)] = None
 
 
@@ -88,23 +87,46 @@ for i in catering_sales.columns:
 print(catering_sales)
 
 # %% 连续属性离散化
-dis_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/discretization_data.xls')
+dis_data = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/discretization_data.xls')
 data = dis_data[u'肝气郁结证型系数'].copy()
 k = 4
 
 d1 = pd.cut(data, k, labels=range(4))  # 等宽离散化
+d1.value_counts()
 
-w = [1.0 * i / k for i in range(k + 1)]
+
+w = [1.0*i/k for i in range(k + 1)]
 w = data.describe(percentiles=w)[4:4 + k + 1]
 w[0] = w[0] * (1 - 1e-10)
 d2 = pd.cut(data, w, labels=range(k))  # 等频率离散化
 
+
+from sklearn.cluster import k_means
 kmodel = KMeans(n_clusters=k, n_jobs=4)  # 建立模型，n_jobs是并行数
 kmodel.fit(data.values.reshape((len(data), 1)))
 c = pd.DataFrame(kmodel.cluster_centers_).sort_values(0)
-w = pd.rolling_mean(c, 2).iloc[1:]
-w = [0] + list(w[0]) + data.max()
+w = c.rolling(2).mean().iloc[1:]
+w = [0] + list(w[0]) + [data.max()]
 d3 = pd.cut(data, w, labels=range(k))
+
+
+def cluster_plot(d, k): # 自定义作图函数显示聚类的结果
+    import matplotlib.pyplot as plt
+    plt.rcParams['font.sans-serif'] = ['SimHei'] # 用来正常显示中文标签
+    plt.rcParams['axes.unicode_minus'] = False # 用来正常显示负号
+
+    plt.figure(figsize=(5,3))
+    for j in range(k):
+        plt.plot(data[d == j], np.repeat(j, len(data[d == j])), 'o')
+        # plt.plot(data[d == j], [j for i in data[d == j]], 'o')
+
+    plt.ylim([-0.5, k-0.5])
+    return plt
+
+
+cluster_plot(d1, k).show()
+cluster_plot(d2, k).show()
+cluster_plot(d3, k).show()
 
 # %% lagrange插值法
 catering_sale = pd.read_excel('./dataset/Python数据分析与挖掘实战/catering_sale.xls')
@@ -122,6 +144,10 @@ for i in catering_sale.columns:
         if (catering_sale[i].isnull())[j]:
             catering_sale[i][j] = ployinterp_column(catering_sale[i], j)
 
+
+# %% 属性构造
+data = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/electricity_data.xls')
+data['线损率'] = (data['供入电量'] - data['供出电量'])/data['供入电量']
 # %% 逻辑回归
 bankloan = pd.read_excel('./dataset/Python数据分析与挖掘实战/bankloan.xls')
 xx = bankloan.iloc[:, :8]
