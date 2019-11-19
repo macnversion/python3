@@ -148,6 +148,23 @@ for i in catering_sale.columns:
 # %% 属性构造
 data = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/electricity_data.xls')
 data['线损率'] = (data['供入电量'] - data['供出电量'])/data['供入电量']
+
+# %% 主成分分析
+from sklearn.decomposition import PCA
+data = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/principal_component.xls',
+                     header=None)
+
+pca = PCA()
+pca.fit(data)
+pca.components_ # 特征向量
+pca.explained_variance_ratio_ # 各成各自的方差百分比
+
+pca = PCA(3)
+pca.fit(data)
+low_d = pca.transform(data)
+print(low_d)
+
+
 # %% 逻辑回归
 bankloan = pd.read_excel('./dataset/Python数据分析与挖掘实战/bankloan.xls')
 xx = bankloan.iloc[:, :8]
