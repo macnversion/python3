@@ -9,6 +9,11 @@ import scipy as sp
 from scipy.interpolate import lagrange
 import matplotlib.pyplot as plt
 
+# %% 拆分一个cell出来记录相关的问题
+'''
+1. 逻辑回归缺失
+'''
+
 # %% 基本的几个包的应用
 # scipy求解方程组
 from scipy.optimize import fsolve
@@ -165,37 +170,26 @@ low_d = pca.transform(data)
 print(low_d)
 
 
-# %% 逻辑回归
-bankloan = pd.read_excel('./dataset/Python数据分析与挖掘实战/bankloan.xls')
-xx = bankloan.iloc[:, :8]
-yy = bankloan.iloc[:, 8]
-x = xx.as_matrix()
-y = yy.as_matrix()
+# %% 使用主成分分析对一个10*4的随机矩阵进行主成分分析
+from sklearn.decomposition import PCA
+D = np.random.rand(10,4)
+pca = PCA()
+pca.fit(D)
+print(pca.components_)
+print(pca.explained_variance_ratio_)
 
-from sklearn.linear_model import LogisticRegression as LR
-from sklearn.linear_model import RandomizedLogisticRegression as RLR
-
-rlr = RLR()
-rlr.fit(x, y)
-rlr.get_support()
-print(u'通过随机逻辑回归模型筛选特征结束 。')
-print(u'有效特征为：%s' % ','.join(xx.columns[rlr.get_support()]))
-
-x = xx[xx.columns[rlr.get_support()]].as_matrix()
-lr = LR()
-lr.fit(x, y)
-print(u'逻辑回归模型训练结束')
-print(u'模型平均正确率为:%s' % lr.score(x, y))
 
 # %% 决策树
-sales_data = pd.read_excel('./dataset/Python数据分析与挖掘实战/sales_data.xls')
-sales_data[sales_data == u'好'] = 1
-sales_data[sales_data == u'是'] = 1
-sales_data[sales_data == u'高'] = 1
-sales_data[sales_data != 1] = -1
+sales_data = pd.read_excel('./python3/dataset/Python数据分析与挖掘实战/sales_data.xls')
+sales_data.loc[sales_data['天气'] == '好', ['天气']] = 1
+sales_data.loc[sales_data['是否周末'] == '是', ['是否周末']] = 1
+sales_data.loc[sales_data['是否有促销'] == '是', ['是否有促销']] = 1
+sales_data.loc[sales_data['天气'] == '坏', ['天气']] = -1
+sales_data.loc[sales_data['是否周末'] == '否', ['是否周末']] = -1
+sales_data.loc[sales_data['是否有促销'] == '否', ['是否有促销']] = -1
 
 x = sales_data.iloc[:, :3].as_matrix().astype(int)
-y = sales_data.iloc[:, :3].as_matrix().astype(int)
+y = sales_data.iloc[:, 3].as_matrix().astype(int)
 
 from sklearn.tree import DecisionTreeClassifier as DTC
 
