@@ -183,7 +183,7 @@ population = pd.Series({'California':38332521, 'Texas':26448193, 'New York': 196
 data = pd.DataFrame({'area':area, 'population':population})
 data['density'] = data['population']/data['area']
 data['id'] = np.random.randint(10, size=6)
-data.iloc[:3, :2] # 使用iloc的隐式索引
+data.iloc[:3, :2] # 使用iloc的隐式索引，iloc使下标对数据进行索引
 data.loc[:'New York', :'population'] # 使用loc的显式索引
 #data.ix[:3, :'population'] # ix混合索引，ix同样存在容易混淆的问题, .ix is deprecated
 data.loc[data.density > 90, ['population', 'density']]
