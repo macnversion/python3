@@ -35,3 +35,4 @@ df['School'].value_counts() # 类似groupby后的count计数操作
 # 再起构造一个数据
 df_demo = df[['Gender', 'Transfer', 'Name']]
 df_demo.drop_duplicates(['Gender', 'Transfer'])
+df_demo.drop_duplicates(['Gender', 'Transfer'], keep='last')
