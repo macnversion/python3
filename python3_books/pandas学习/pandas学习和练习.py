@@ -36,3 +36,7 @@ df['School'].value_counts() # 类似groupby后的count计数操作
 df_demo = df[['Gender', 'Transfer', 'Name']]
 df_demo.drop_duplicates(['Gender', 'Transfer'])
 df_demo.drop_duplicates(['Gender', 'Transfer'], keep='last')
+
+# 替换函数：映射替换、逻辑替换、数值替换
+df['Gender'].replace({'Female':0, 'Male':1})
+df['Gender'].replace(['Female', 'Male'], [0, 1])
