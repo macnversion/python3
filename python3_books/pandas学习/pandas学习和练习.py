@@ -12,10 +12,16 @@ import pandas as pd
 from pandas import DataFrame, Series
 import matplotlib as plt
 import os
+import string
 
 # %% 查看pandas的版本
 print(pd.__version__)
 print(pd.show_versions())
 
 # %% 使用python list、python dict、numpy.ndarray创建pandas.series
-my
+mylist = list(string.ascii_lowercase) # python list
+myarr = np.arange(26)
+mydict = dict(zip(mylist, myarr))
+
+ser1 = pd.Series(mylist)
+ser2 = pd.Series(myarr)
