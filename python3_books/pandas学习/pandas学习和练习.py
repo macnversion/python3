@@ -25,3 +25,8 @@ mydict = dict(zip(mylist, myarr))
 
 ser1 = pd.Series(mylist)
 ser2 = pd.Series(myarr)
+ser3 = pd.Series(mydict)
+
+print(f'ser1 is \n{ser1}')
+print(f'ser2 is \n{ser2}')
+print(f'ser3 is \n{ser3}')
