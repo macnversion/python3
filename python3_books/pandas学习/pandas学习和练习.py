@@ -75,7 +75,8 @@ print(ser.value_counts())
 np.random.RandomState(100)
 ser = pd.Series(np.random.randint(1, 5, [12]))
 
-print(f'top 2 value_counts: \n{ser.value_counts}')
+print(f'top 2 value_counts: \n{ser.value_counts()}')
+ser[~ser.isin(ser.value_counts().index[:2])] = 'other'
 # %% 11、将pandas.Series()均分为10个区间、每个值使用区间名称标记
 # %% 12、将pandas.Series()转换为指定shape的pandas.DataFrame
 # %% 13、取出pandas.Series()中满足条件数据的位置index
