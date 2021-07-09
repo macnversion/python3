@@ -78,8 +78,17 @@ ser = pd.Series(np.random.randint(1, 5, [12]))
 print(f'top 2 value_counts: \n{ser.value_counts()}')
 ser[~ser.isin(ser.value_counts().index[:2])] = 'other'
 # %% 11、将pandas.Series()均分为10个区间、每个值使用区间名称标记
+np.random.seed(666)
+ser = pd.Series(np.random.random(20))
+print(pd.qcut(ser, np.arange(0, 1.1, 0.1)))
+print(pd.qcut(ser, np.arange(0, 1.1, 0.1), labels=[str(i)+'st' for i in np.arange(1, 11, 1)]))
 # %% 12、将pandas.Series()转换为指定shape的pandas.DataFrame
+ser = pd.Series(np.random.randint(1,10,35))
+df = pd.DataFrame(ser.values.reshape(7,5))
 # %% 13、取出pandas.Series()中满足条件数据的位置index
+np.random.seed(666)
+ser = pd.Series(np.random.randint(1, 10, 7))
+np.argwhere(ser.values % 3 == 0)
 # %% 14、取出pandas.Series()指定位置的数据
 # %% 15、pandas.Series()水平、垂直合并
 # %% 16、输出pandas.Series()子集的index号
